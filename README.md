@@ -1,328 +1,120 @@
-<html lang="th">
+<!DOCTYPE html>
+<html>
 <head>
+    <title>ระบบแสดงข้อมูลน้ำแบบ Real-time</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background-color: #f0f8ff;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Kanit', sans-serif;
+            background-color: #f5f9ff;
+            padding: 20px;
         }
-        
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
-            background-color: #1e88e5;
-            color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .header h1 {
-            margin-bottom: 10px;
-            font-size: 2rem;
-        }
-        
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .card {
             background: white;
-            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .card h2 {
-            color: #1e88e5;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .value {
-            font-size: 2.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
+        h1 {
             color: #2c3e50;
+            text-align: center;
         }
-        
-        .unit {
-            font-size: 1rem;
+        .data-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        .data-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .ph { color: #3498db; }
+        .tds { color: #e74c3c; }
+        .turbidity { color: #2ecc71; }
+        #last-updated {
+            text-align: right;
+            font-style: italic;
             color: #7f8c8d;
         }
-        
-        .chart-container {
-            height: 200px;
-            margin-top: 15px;
-            position: relative;
-        }
-        
-        .status {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            background-color: #f8f9fa;
-        }
-        
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .good {
-            background-color: #2ecc71;
-        }
-        
-        .warning {
-            background-color: #f39c12;
-        }
-        
-        .danger {
-            background-color: #e74c3c;
-        }
-        
-        .data-table-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        
-        .data-table th {
-            background-color: #1e88e5;
-            color: white;
-            padding: 12px 15px;
-            text-align: left;
-        }
-        
-        .data-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ecf0f1;
-        }
-        
-        .data-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        
-        .refresh-btn {
-            background-color: #1e88e5;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.3s;
-        }
-        
-        .refresh-btn:hover {
-            background-color: #1565c0;
-        }
-        
-        .footer {
+        #loading {
             text-align: center;
             padding: 20px;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .value {
-                font-size: 1.8rem;
-            }
         }
     </style>
+    <!-- ใช้ฟอนต์ Kanit สำหรับภาษาไทย -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-fish"></i> Fish-smile </h1>
-            <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
-        </div>
+        <h1>📊 ระบบติดตามคุณภาพน้ำ</h1>
         
-        <div class="dashboard">
-            <div class="card">
-                <h2><i class="fas fa-tint"></i> ค่า pH</h2>
-                <div class="value">7.2 <span class="unit">pH</span></div>
-                <div class="status">
-                    <div class="status-indicator good"></div>
-                    <span>อยู่ในเกณฑ์ปกติ (6.5-8.5)</span>
-                </div>
-                <div class="chart-container" id="phChart">
-                    <!-- กราฟจะถูกเพิ่มโดย JavaScript -->
-                    <div style="height: 100%; display: flex; justify-content: center; align-items: center; color: #95a5a6;">
-                        <p>กราฟแสดงค่า pH ย้อนหลัง 24 ชั่วโมง</p>
-                    </div>
-                </div>
+        <div id="loading">กำลังโหลดข้อมูล...</div>
+        
+        <div id="data-container" style="display:none;">
+            <div class="data-card">
+                <span>ค่า pH:</span>
+                <span class="data-value ph" id="ph-value">--</span>
             </div>
             
-            <div class="card">
-                <h2><i class="fas fa-water"></i> ค่า TDS</h2>
-                <div class="value">320 <span class="unit">ppm</span></div>
-                <div class="status">
-                    <div class="status-indicator good"></div>
-                    <span>อยู่ในเกณฑ์ปกติ (100-500 ppm)</span>
-                </div>
-                <div class="chart-container" id="tdsChart">
-                    <div style="height: 100%; display: flex; justify-content: center; align-items: center; color: #95a5a6;">
-                        <p>กราฟแสดงค่า TDS ย้อนหลัง 24 ชั่วโมง</p>
-                    </div>
-                </div>
+            <div class="data-card">
+                <span>ค่า TDS (ppm):</span>
+                <span class="data-value tds" id="tds-value">--</span>
             </div>
             
-            <div class="card">
-                <h2><i class="fas fa-cloud"></i> ความขุ่น</h2>
-                <div class="value">5.1 <span class="unit">NTU</span></div>
-                <div class="status">
-                    <div class="status-indicator good"></div>
-                    <span>อยู่ในเกณฑ์ปกติ (0-10 NTU)</span>
-                </div>
-                <div class="chart-container" id="turbidityChart">
-                    <div style="height: 100%; display: flex; justify-content: center; align-items: center; color: #95a5a6;">
-                        <p>กราฟแสดงค่าความขุ่นย้อนหลัง 24 ชั่วโมง</p>
-                    </div>
-                </div>
+            <div class="data-card">
+                <span>ค่าความขุ่น (NTU):</span>
+                <span class="data-value turbidity" id="turbidity-value">--</span>
             </div>
-        </div>
-        
-        <div class="data-table-container">
-            <h2><i class="fas fa-history"></i> ข้อมูลย้อนหลัง</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>วันที่/เวลา</th>
-                        <th>ค่า pH</th>
-                        <th>ค่า TDS</th>
-                        <th>ความขุ่น</th>
-                        <th>สถานะ</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTableBody">
-                    <tr>
-                        <td>${new Date().toLocaleString('th-TH')}</td>
-                        <td>7.2</td>
-                        <td>320</td>
-                        <td>5.1</td>
-                        <td><div class="status-indicator good"></div> ปกติ</td>
-                    </tr>
-                    <tr>
-                        <td>${new Date(Date.now() - 3600000).toLocaleString('th-TH')}</td>
-                        <td>7.1</td>
-                        <td>315</td>
-                        <td>5.3</td>
-                        <td><div class="status-indicator good"></div> ปกติ</td>
-                    </tr>
-                    <tr>
-                        <td>${new Date(Date.now() - 7200000).toLocaleString('th-TH')}</td>
-                        <td>7.0</td>
-                        <td>310</td>
-                        <td>5.5</td>
-                        <td><div class="status-indicator good"></div> ปกติ</td>
-                    </tr>
-                    <tr>
-                        <td>${new Date(Date.now() - 10800000).toLocaleString('th-TH')}</td>
-                        <td>6.9</td>
-                        <td>305</td>
-                        <td>5.8</td>
-                        <td><div class="status-indicator good"></div> ปกติ</td>
-                    </tr>
-                </tbody>
-            </table>
-            <button class="refresh-btn" onclick="loadData()">
-                <i class="fas fa-sync-alt"></i> โหลดข้อมูลใหม่
-            </button>
-        </div>
-        
-        <div class="footer">
-            <p>ระบบ  Dashboard | พัฒนาโดยทีมงาน AquaTech | © 2023</p>
+            
+            <div id="last-updated">อัปเดตล่าสุด: <span id="update-time">-</span></div>
         </div>
     </div>
 
     <script>
-        // ฟังก์ชันสำหรับโหลดข้อมูล
-        function loadData() {
-            // ในสภาพแวดล้อมจริงควรดึงข้อมูลจาก API
-            
-            // สุ่มค่าข้อมูลใหม่ (สำหรับตัวอย่าง)
-            const newpH = (7.0 + Math.random() * 0.4).toFixed(1);
-            const newTDS = Math.floor(300 + Math.random() * 50);
-            const newTurbidity = (5.0 + Math.random() * 2).toFixed(1);
-            
-            // อัพเดทค่า
-            document.querySelector('.card:nth-child(1) .value').innerHTML = `${newpH} <span class="unit">pH</span>`;
-            document.querySelector('.card:nth-child(2) .value').innerHTML = `${newTDS} <span class="unit">ppm</span>`;
-            document.querySelector('.card:nth-child(3) .value').innerHTML = `${newTurbidity} <span class="unit">NTU</span>`;
-            
-            // เพิ่มข้อมูลใหม่ในตาราง
-            const tableBody = document.getElementById('dataTableBody');
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${new Date().toLocaleString('th-TH')}</td>
-                <td>${newpH}</td>
-                <td>${newTDS}</td>
-                <td>${newTurbidity}</td>
-                <td><div class="status-indicator good"></div> ปกติ</td>
-            `;
-            tableBody.insertBefore(newRow, tableBody.firstChild);
-            
-            // จำกัดจำนวนแถวในตารางไม่เกิน 10 แถว
-            if (tableBody.children.length > 10) {
-                tableBody.removeChild(tableBody.lastChild);
+        // ใส่ URL Web App ของคุณที่นี่
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbylzCVh6uAy-P6fKzH6T9DiEBNAFcpr8iGhlXpwIzwkr29rZbc2FKRBEQlbN1MiF4P55w/exec';
+        
+        async function fetchWaterData() {
+            try {
+                document.getElementById('loading').textContent = 'กำลังโหลดข้อมูลล่าสุด...';
+                
+                // เพิ่ม timestamp เพื่อป้องกันการ cache
+                const response = await fetch(`${WEB_APP_URL}?t=${new Date().getTime()}`);
+                const data = await response.json();
+                
+                // แสดงข้อมูล (สมมติว่า Sheet มีโครงสร้าง: [วันที่, pH, TDS, ความขุ่น])
+                const latestData = data[data.length - 1]; // เอาข้อมูลล่าสุด
+                
+                document.getElementById('ph-value').textContent = latestData[1];
+                document.getElementById('tds-value').textContent = latestData[2];
+                document.getElementById('turbidity-value').textContent = latestData[3];
+                
+                // แสดงเวลาอัปเดต
+                const now = new Date();
+                document.getElementById('update-time').textContent = now.toLocaleTimeString('th-TH');
+                
+                // ซ่อน loading แสดงข้อมูล
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('data-container').style.display = 'block';
+                
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาด:', error);
+                document.getElementById('loading').textContent = '⚠️ ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่ภายหลัง';
             }
-            
-            // แสดงข้อความแจ้งเตือน
-            alert('อัพเดทข้อมูลล่าสุดเรียบร้อยแล้ว');
         }
+        
+        // โหลดข้อมูลครั้งแรกเมื่อหน้าเว็บโหลดเสร็จ
+        document.addEventListener('DOMContentLoaded', fetchWaterData);
+        
+        // อัปเดตข้อมูลทุก 1 นาที (60000 มิลลิวินาที)
+        setInterval(fetchWaterData, 60000);
     </script>
 </body>
 </html>
