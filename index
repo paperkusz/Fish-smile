@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish-Smile Device Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        .header h1 {
+            color: #1e88e5;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .devices-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .device-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .device-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border-color: #1e88e5;
+        }
+        
+        .device-icon {
+            font-size: 3rem;
+            color: #1e88e5;
+            margin-bottom: 15px;
+        }
+        
+        .device-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .device-location {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        
+        .device-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .status-normal {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-warning {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+        
+        .status-danger {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 768px) {
+            .devices-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-fish"></i> Fish-Smile Monitoring System</h1>
+        <p>เลือกอุปกรณ์ที่ต้องการตรวจสอบคุณภาพน้ำ</p>
+    </div>
+    
+    <div class="devices-container">
+        <!-- อุปกรณ์ที่ 1 -->
+        <div class="device-card" onclick="window.location.href='dashboard.html?device=1'">
+            <div class="device-icon">
+                <i class="fas fa-water"></i>
+            </div>
+            <h3 class="device-name">บ่อปลาหมอไทย</h3>
+            <p class="device-location">ฟาร์มสวนน้ำใจ, จ.ปทุมธานี</p>
+            <div class="device-status status-normal">
+                <i class="fas fa-check-circle"></i> ปกติ
+            </div>
+        </div>
+        
+        <!-- อุปกรณ์ที่ 2 -->
+        <div class="device-card" onclick="window.location.href='dashboard.html?device=2'">
+            <div class="device-icon">
+                <i class="fas fa-fish"></i>
+            </div>
+            <h3 class="device-name">บ่อปลานิล</h3>
+            <p class="device-location">ฟาร์มน้ำใส, จ.นครปฐม</p>
+            <div class="device-status status-warning">
+                <i class="fas fa-exclamation-triangle"></i> ควรตรวจสอบ
+            </div>
+        </div>
+        
+        <!-- อุปกรณ์ที่ 3 -->
+        <div class="device-card" onclick="window.location.href='dashboard.html?device=3'">
+            <div class="device-icon">
+                <i class="fas fa-tint"></i>
+            </div>
+            <h3 class="device-name">บ่อปลาดุก</h3>
+            <p class="device-location">ฟาร์มปลาเศรษฐกิจ, จ.สมุทรสาคร</p>
+            <div class="device-status status-normal">
+                <i class="fas fa-check-circle"></i> ปกติ
+            </div>
+        </div>
+        
+        <!-- อุปกรณ์ที่ 4 -->
+        <div class="device-card" onclick="window.location.href='dashboard.html?device=4'">
+            <div class="device-icon">
+                <i class="fas fa-cloud-rain"></i>
+            </div>
+            <h3 class="device-name">บ่ออนุบาลลูกปลา</h3>
+            <p class="device-location">ฟาร์มสวนน้ำใจ, จ.ปทุมธานี</p>
+            <div class="device-status status-danger">
+                <i class="fas fa-times-circle"></i> ต้องแก้ไขด่วน
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>ระบบ Fish-Smile Monitoring System | © 2023</p>
+    </div>
+
+    <script>
+        // สามารถเพิ่มการดึงข้อมูลสถานะอุปกรณ์แบบ Real-time ได้ที่นี่
+        // เช่นใช้ fetch API เพื่อตรวจสอบสถานะล่าสุดของแต่ละอุปกรณ์
+    </script>
+</body>
+</html>
