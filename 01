@@ -1,0 +1,701 @@
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish-Smile Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background-color: #1e88e5;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #1e88e5;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .unit {
+            font-size: 1rem;
+            color: #7f8c8d;
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+            position: relative;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .good {
+            background-color: #2ecc71;
+        }
+        
+        .warning {
+            background-color: #f39c12;
+        }
+        
+        .danger {
+            background-color: #e74c3c;
+        }
+        
+        .data-table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .data-table th {
+            background-color: #1e88e5;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .refresh-btn {
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background-color: #1565c0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .value {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e88e5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* AI Analysis Section */
+        .analysis-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #1e88e5;
+        }
+        
+        .analysis-content {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+        
+        .analysis-good {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .analysis-warning {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .analysis-danger {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .recommendation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            font-style: italic;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .notification-container {
+            position: relative;
+        }
+        
+        /* Custom chart styles */
+        .simple-chart {
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background-color: #1e88e5;
+            border-radius: 3px 3px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.7rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-fish"></i> Fish-Smile Monitoring System</h1>
+            <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
+        </div>
+        
+        <div class="loader" id="loader"></div>
+        
+        <div class="dashboard" id="dashboard">
+            <div class="card">
+                <h2><i class="fas fa-tint"></i> ค่า pH</h2>
+                <div class="value" id="phValue">-- <span class="unit">pH</span></div>
+                <div class="status">
+                    <div class="status-indicator"></div>
+                    <span>กำลังโหลดข้อมูล...</span>
+                </div>
+                <div class="chart-container" id="phChart">
+                    <div style="height: 100%; display: flex; justify-content: center; align-items: center; color: #95a5a6;">
+                        <p>กราฟแสดงค่า pH ย้อนหลัง</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-water"></i> ค่า TDS</h2>
+                <div class="value" id="tdsValue">-- <span class="unit">ppm</span></div>
+                <div class="status">
+                    <div class="status-indicator"></div>
+                    <span>กำลังโหลดข้อมูล...</span>
+                </div>
+                <div class="chart-container" id="tdsChart">
+                    <div style="height: 100%; display: flex; justify-content: center; align-items: center; color: #95a5a6;">
+                        <p>กราฟแสดงค่า TDS ย้อนหลัง</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-cloud"></i> ความขุ่น</h2>
+                <div class="value" id="turbidityValue">-- <span class="unit">NTU</span></div>
+                <div class="status">
+                    <div class="status-indicator"></div>
+                    <span>กำลังโหลดข้อมูล...</span>
+                </div>
+                <div class="chart-container" id="turbidityChart">
+                    <div style="height: 100%; display: flex; justify-content: center; align-items: center; color: #95a5a6;">
+                        <p>กราฟแสดงค่าความขุ่นย้อนหลัง</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ส่วนวิเคราะห์ด้วย AI -->
+        <div class="analysis-container" id="aiAnalysisContainer">
+            <h2><i class="fas fa-brain"></i> การวิเคราะห์คุณภาพน้ำด้วย AI</h2>
+            <div class="analysis-content" id="aiAnalysisContent">
+                <p>กำลังวิเคราะห์ข้อมูลคุณภาพน้ำ...</p>
+            </div>
+            <div class="recommendation" id="aiRecommendation">
+                <p><strong>คำแนะนำ:</strong> กำลังประมวลผลคำแนะนำ...</p>
+            </div>
+        </div>
+        
+        <div class="data-table-container">
+            <h2><i class="fas fa-history"></i> ข้อมูลย้อนหลัง</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>วันที่/เวลา</th>
+                        <th>ค่า pH</th>
+                        <th>ค่า TDS</th>
+                        <th>ความขุ่น</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center;">กำลังโหลดข้อมูล...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="refresh-btn" onclick="loadData()">
+                <i class="fas fa-sync-alt"></i> โหลดข้อมูลใหม่
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>ระบบ Fish-Smile Dashboard | พัฒนาโดยทีมงาน AquaTech | © 2023</p>
+        </div>
+    </div>
+
+    <script>
+        // URL ของ Google Apps Script Web App
+        const API_URL = "https://script.google.com/macros/s/AKfycbylzCVh6uAy-P6fKzH6T9DiEBNAFcpr8iGhlXpwIzwkr29rZbc2FKRBEQlbN1MiF4P55w/exec";
+        
+        // ฟังก์ชันสำหรับโหลดข้อมูล
+        async function loadData() {
+            const loader = document.getElementById('loader');
+            const dashboard = document.getElementById('dashboard');
+            
+            // แสดง loading spinner
+            loader.style.display = 'block';
+            dashboard.style.opacity = '0.5';
+            
+            try {
+                // ดึงข้อมูลจาก API
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    // แปลงข้อมูลให้ตรงกับรูปแบบที่ต้องการ
+                    const formattedData = data.map(item => {
+                        // แปลงวันที่จากรูปแบบ "วัน/เดือน/ปี, เวลา" เป็น Date object
+                        const [datePart, timePart] = item['วันเวลา'].split(', ');
+                        const [day, month, year] = datePart.split('/').map(Number);
+                        const [hours, minutes, seconds] = timePart.split(':').map(Number);
+                        
+                        return {
+                            timestamp: new Date(year + 2000, month - 1, day, hours, minutes, seconds),
+                            pH: parseFloat(item['pH']),
+                            tds: parseFloat(item['TDS']),
+                            turbidity: parseFloat(item['ความขุ่น'])
+                        };
+                    });
+                    
+                    // เรียงข้อมูลจากล่าสุดไปเก่าสุด
+                    const sortedData = formattedData.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    // ข้อมูลล่าสุด
+                    const latestData = sortedData[0];
+                    
+                    // อัพเดทค่าใน Dashboard
+                    updateDashboard(latestData);
+                    
+                    // อัพเดทตารางข้อมูลย้อนหลัง
+                    updateDataTable(sortedData);
+                    
+                    // อัพเดทสถานะ
+                    updateStatus(latestData);
+                    
+                    // สร้างกราฟง่ายๆ
+                    createSimpleCharts(sortedData.slice(0, 10).reverse());
+                    
+                    // วิเคราะห์ข้อมูลด้วย AI
+                    analyzeWaterQuality(latestData);
+                } else {
+                    alert('ไม่พบข้อมูลในระบบ');
+                }
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการโหลดข้อมูล:', error);
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+            } finally {
+                // ซ่อน loading spinner
+                loader.style.display = 'none';
+                dashboard.style.opacity = '1';
+            }
+        }
+        
+        // อัพเดท Dashboard ด้วยข้อมูลล่าสุด
+        function updateDashboard(data) {
+            document.getElementById('phValue').innerHTML = `${data.pH || '--'} <span class="unit">pH</span>`;
+            document.getElementById('tdsValue').innerHTML = `${data.tds || '--'} <span class="unit">ppm</span>`;
+            document.getElementById('turbidityValue').innerHTML = `${data.turbidity || '--'} <span class="unit">NTU</span>`;
+        }
+        
+        // อัพเดทตารางข้อมูลย้อนหลัง
+        function updateDataTable(data) {
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '';
+            
+            // จำกัดจำนวนแถวที่แสดง (10 แถวล่าสุด)
+            const displayData = data.slice(0, 10);
+            
+            displayData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // จัดรูปแบบวันที่
+                const formattedDate = item.timestamp.toLocaleString('th-TH', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // ตรวจสอบสถานะ
+                let statusClass = 'good';
+                let statusText = 'ปกติ';
+                
+                // เงื่อนไขตรวจสอบสถานะ
+                if (item.pH < 6.5 || item.pH > 8.5) {
+                    statusClass = 'danger';
+                    statusText = 'pH ผิดปกติ';
+                } else if (item.tds < 100 || item.tds > 500) {
+                    statusClass = 'danger';
+                    statusText = 'TDS ผิดปกติ';
+                } else if (item.turbidity > 10) {
+                    statusClass = 'danger';
+                    statusText = 'ความขุ่นสูง';
+                }
+                
+                row.innerHTML = `
+                    <td>${formattedDate}</td>
+                    <td>${item.pH || '--'}</td>
+                    <td>${item.tds || '--'}</td>
+                    <td>${item.turbidity || '--'}</td>
+                    <td><div class="status-indicator ${statusClass}"></div> ${statusText}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // สร้างกราฟง่ายๆ
+        function createSimpleCharts(data) {
+            createSimpleChart('phChart', data.map(d => d.pH), 'pH');
+            createSimpleChart('tdsChart', data.map(d => d.tds), 'TDS (ppm)');
+            createSimpleChart('turbidityChart', data.map(d => d.turbidity), 'ความขุ่น (NTU)');
+        }
+        
+        function createSimpleChart(chartId, values, label) {
+            const container = document.getElementById(chartId);
+            container.innerHTML = '';
+            
+            const maxValue = Math.max(...values, 10); // อย่างน้อย 10 เพื่อให้กราฟไม่แบนเกินไป
+            const chartHeight = 150; // ความสูงของกราฟ
+            
+            const chartWrapper = document.createElement('div');
+            chartWrapper.className = 'simple-chart';
+            
+            // สร้างแท่งกราฟ
+            values.forEach(value => {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                const height = (value / maxValue) * chartHeight;
+                bar.style.height = `${height}px`;
+                bar.title = `${value}`;
+                chartWrapper.appendChild(bar);
+            });
+            
+            container.appendChild(chartWrapper);
+            
+            // สร้าง label ด้านล่าง
+            const labels = document.createElement('div');
+            labels.className = 'chart-labels';
+            labels.innerHTML = `
+                <span>${data[0].timestamp.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})}</span>
+                <span>${label}</span>
+                <span>${data[data.length-1].timestamp.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})}</span>
+            `;
+            container.appendChild(labels);
+        }
+        
+        // อัพเดทสถานะ
+        function updateStatus(data) {
+            // อัพเดทสถานะ pH
+            const phStatus = document.querySelector('.card:nth-child(1) .status');
+            const phIndicator = document.querySelector('.card:nth-child(1) .status-indicator');
+            
+            if (data.pH >= 6.5 && data.pH <= 8.5) {
+                phIndicator.className = 'status-indicator good';
+                phStatus.querySelector('span').textContent = 'อยู่ในเกณฑ์ปกติ (6.5-8.5)';
+            } else {
+                phIndicator.className = 'status-indicator danger';
+                phStatus.querySelector('span').textContent = 'อยู่นอกเกณฑ์ปกติ (6.5-8.5)';
+            }
+            
+            // อัพเดทสถานะ TDS
+            const tdsStatus = document.querySelector('.card:nth-child(2) .status');
+            const tdsIndicator = document.querySelector('.card:nth-child(2) .status-indicator');
+            
+            if (data.tds >= 100 && data.tds <= 500) {
+                tdsIndicator.className = 'status-indicator good';
+                tdsStatus.querySelector('span').textContent = 'อยู่ในเกณฑ์ปกติ (100-500 ppm)';
+            } else {
+                tdsIndicator.className = 'status-indicator danger';
+                tdsStatus.querySelector('span').textContent = 'อยู่นอกเกณฑ์ปกติ (100-500 ppm)';
+            }
+            
+            // อัพเดทสถานะความขุ่น
+            const turbidityStatus = document.querySelector('.card:nth-child(3) .status');
+            const turbidityIndicator = document.querySelector('.card:nth-child(3) .status-indicator');
+            
+            if (data.turbidity <= 10) {
+                turbidityIndicator.className = 'status-indicator good';
+                turbidityStatus.querySelector('span').textContent = 'อยู่ในเกณฑ์ปกติ (0-10 NTU)';
+            } else {
+                turbidityIndicator.className = 'status-indicator danger';
+                turbidityStatus.querySelector('span').textContent = 'อยู่นอกเกณฑ์ปกติ (0-10 NTU)';
+            }
+        }
+        
+        // ฟังก์ชันวิเคราะห์คุณภาพน้ำด้วย AI
+        function analyzeWaterQuality(data) {
+            const analysisContent = document.getElementById('aiAnalysisContent');
+            const recommendation = document.getElementById('aiRecommendation');
+            const container = document.getElementById('aiAnalysisContainer');
+            
+            // ตรวจสอบค่าต่างๆ
+            const ph = parseFloat(data.pH) || 0;
+            const tds = parseFloat(data.tds) || 0;
+            const turbidity = parseFloat(data.turbidity) || 0;
+            
+            let waterQuality = 'ดี';
+            let analysisClass = 'analysis-good';
+            let problems = [];
+            let solutions = [];
+            
+            // ตรวจสอบปัญหา pH
+            if (ph < 6.5 || ph > 8.5) {
+                problems.push(`ค่า pH (${ph}) อยู่นอกช่วงที่เหมาะสม (6.5-8.5)`);
+                if (ph < 6.5) {
+                    solutions.push('เพิ่มค่า pH โดยใช้ปูนขาวหรือโซดาแช');
+                } else {
+                    solutions.push('ลดค่า pH โดยใช้กรดอินทรีย์หรือกรดฟอสฟอริก');
+                }
+            }
+            
+            // ตรวจสอบปัญหา TDS (จากข้อมูลตัวอย่างค่า TDS ต่ำมาก)
+            if (tds < 50) {
+                problems.push(`ค่า TDS (${tds} ppm) ต่ำมาก (ควรอยู่ระหว่าง 100-500 ppm)`);
+                solutions.push('เพิ่มแร่ธาตุในน้ำหรือเปลี่ยนน้ำบางส่วน');
+            } else if (tds > 500) {
+                problems.push(`ค่า TDS (${tds} ppm) สูงเกินไป (ควรอยู่ระหว่าง 100-500 ppm)`);
+                solutions.push('เปลี่ยนน้ำบางส่วนเพื่อลดความเข้มข้นของแร่ธาตุ');
+            }
+            
+            // ตรวจสอบปัญหาความขุ่น
+            if (turbidity > 10) {
+                problems.push(`ค่าความขุ่น (${turbidity} NTU) สูงเกินไป (>10 NTU)`);
+                solutions.push('ใช้เครื่องกรองน้ำหรือสารช่วยตกตะกอน');
+                solutions.push('ตรวจสอบระบบกรองและทำความสะอาด');
+            }
+            
+            // กำหนดระดับความรุนแรง
+            if (problems.length > 0) {
+                waterQuality = 'มีปัญหา';
+                analysisClass = problems.length > 1 ? 'analysis-danger' : 'analysis-warning';
+            }
+            
+            // สร้างข้อความวิเคราะห์
+            let analysisText = `<p><strong>สถานะน้ำ:</strong> ${waterQuality}</p>`;
+            
+            if (problems.length > 0) {
+                analysisText += `<p><strong>ปัญหาที่พบ:</strong></p><ul>`;
+                problems.forEach(problem => {
+                    analysisText += `<li>${problem}</li>`;
+                });
+                analysisText += `</ul>`;
+            } else {
+                analysisText += `<p>คุณภาพน้ำอยู่ในเกณฑ์ดี เหมาะสำหรับการเลี้ยงปลา</p>`;
+            }
+            
+            // สร้างคำแนะนำ
+            let recommendationText = '<p><strong>คำแนะนำ:</strong></p>';
+            
+            if (solutions.length > 0) {
+                recommendationText += '<ul>';
+                solutions.forEach(solution => {
+                    recommendationText += `<li>${solution}</li>`;
+                });
+                recommendationText += '</ul>';
+            } else {
+                recommendationText += '<p>ไม่จำเป็นต้องดำเนินการใดๆ ในขณะนี้</p>';
+            }
+            
+            // อัพเดท UI
+            analysisContent.innerHTML = analysisText;
+            analysisContent.className = `analysis-content ${analysisClass}`;
+            recommendation.innerHTML = recommendationText;
+            
+            // แสดงการแจ้งเตือนหากมีปัญหา
+            if (problems.length > 0) {
+                showNotification(problems.length);
+            }
+        }
+        
+        // แสดงการแจ้งเตือน
+        function showNotification(count) {
+            const header = document.querySelector('.header');
+            
+            // ลบการแจ้งเตือนเก่าถ้ามี
+            const oldNotification = document.querySelector('.notification-container');
+            if (oldNotification) {
+                header.removeChild(oldNotification);
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification-container';
+            notification.innerHTML = `
+                <i class="fas fa-bell" style="font-size: 1.5rem; color: #e74c3c;"></i>
+                <div class="notification-badge">${count}</div>
+            `;
+            header.appendChild(notification);
+            
+            // แสดงการแจ้งเตือนบนหน้าเว็บ
+            if (count > 0) {
+                const alertMessage = `มีปัญหาคุณภาพน้ำ ${count} ข้อที่ต้องแก้ไข!\n\n`;
+                const analysisContent = document.getElementById('aiAnalysisContent').textContent;
+                alert(alertMessage + analysisContent.replace(/\n/g, ' '));
+            }
+        }
+        
+        // โหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
+        document.addEventListener('DOMContentLoaded', loadData);
+        
+        // โหลดข้อมูลทุก 5 นาที
+        setInterval(loadData, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
