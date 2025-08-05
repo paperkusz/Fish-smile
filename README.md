@@ -186,8 +186,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-fish"></i> Fish-Smile Monitoring System</h1>
-            <p>ระบบตรวจสอบคุณภาพน้ำในบ่อเลี้ยงปลาแบบเรียลไทม์</p>
+            <h1><i class="fas fa-fish"></i>  </h1>
+            <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
         <div class="dashboard">
@@ -284,7 +284,7 @@
         </div>
         
         <div class="footer">
-            <p>ระบบ Fish-Smile Dashboard | พัฒนาโดยทีมงาน AquaTech | © 2023</p>
+            <p>ระบบ  Dashboard | พัฒนาโดยทีมงาน AquaTech | © 2023</p>
         </div>
     </div>
 
