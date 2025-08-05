@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -129,7 +128,7 @@
     <div class="container">
         <div class="header">
             <h1>Fish-Smile Monitoring System</h1>
-            <p>ระบบตรวจสอบคุณภาพน้ำแบบเรียลไทม์</p>
+            <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
         <div class="dashboard">
