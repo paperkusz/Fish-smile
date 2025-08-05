@@ -206,7 +206,7 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-fish"></i> Fish-Smile Monitoring System</h1>
-            <p>ระบบตรวจสอบคุณภาพน้ำในบ่อเลี้ยงปลาแบบเรียลไทม์</p>
+            <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
         <div class="loader" id="loader"></div>
