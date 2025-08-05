@@ -1,176 +1,231 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aqua Guard Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f5f5f5;
-    }
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .chart-container {
-      position: relative;
-      height: 300px;
-      width: 100%;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish-Smile Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .good {
+            background-color: #2ecc71;
+        }
+        
+        .warning {
+            background-color: #f39c12;
+        }
+        
+        .danger {
+            background-color: #e74c3c;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .refresh-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+        }
+        
+        .refresh-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-  <h1>Aqua Guard Monitoring</h1>
-  
-  <div class="dashboard">
-    <div class="card">
-      <h2>pH Levels</h2>
-      <div class="chart-container">
-        <canvas id="phChart"></canvas>
-      </div>
+    <div class="container">
+        <div class="header">
+            <h1>Fish-Smile Monitoring System</h1>
+            <p>ระบบตรวจสอบคุณภาพน้ำแบบเรียลไทม์</p>
+        </div>
+        
+        <div class="dashboard">
+            <div class="card">
+                <h2>ค่า pH</h2>
+                <div class="value" id="phValue">7.2</div>
+                <div class="status">
+                    <div class="status-indicator good"></div>
+                    <span>ปกติ</span>
+                </div>
+                <div class="chart-container" id="phChart"></div>
+            </div>
+            
+            <div class="card">
+                <h2>ค่า TDS</h2>
+                <div class="value" id="tdsValue">320 ppm</div>
+                <div class="status">
+                    <div class="status-indicator good"></div>
+                    <span>ปกติ</span>
+                </div>
+                <div class="chart-container" id="tdsChart"></div>
+            </div>
+            
+            <div class="card">
+                <h2>ความขุ่น</h2>
+                <div class="value" id="turbidityValue">5.1 NTU</div>
+                <div class="status">
+                    <div class="status-indicator good"></div>
+                    <span>ปกติ</span>
+                </div>
+                <div class="chart-container" id="turbidityChart"></div>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 30px;">
+            <h2>ข้อมูลล่าสุด</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>เวลา</th>
+                        <th>ค่า pH</th>
+                        <th>ค่า TDS</th>
+                        <th>ความขุ่น</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                    <!-- ข้อมูลจะถูกเพิ่มโดย JavaScript -->
+                </tbody>
+            </table>
+            <button class="refresh-btn" onclick="loadData()">
+                <i class="fas fa-sync-alt"></i> โหลดข้อมูลใหม่
+            </button>
+        </div>
     </div>
-    
-    <div class="card">
-      <h2>TDS Values</h2>
-      <div class="chart-container">
-        <canvas id="tdsChart"></canvas>
-      </div>
-    </div>
-    
-    <div class="card">
-      <h2>Latest Readings</h2>
-      <div id="latestData"></div>
-    </div>
-    
-    <div class="card">
-      <h2>All Data</h2>
-      <div style="overflow-x: auto;">
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>pH</th>
-              <th>TDS</th>
-              <th>Turbidity</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
-  <script>
-    // ฟังก์ชันดึงข้อมูล
-    async function fetchData() {
-      try {
-        // ใช้วิธีที่ 1 หรือ 2 ที่กล่าวมา
-        const response = await fetch('YOUR_API_ENDPOINT');
-        const data = await response.json();
-        return data.values || data;
-      } catch (error) {
-        console.error('Error:', error);
-        return null;
-      }
-    }
-
-    // ฟังก์ชันแสดงข้อมูล
-    function displayData(data) {
-      if (!data || data.length === 0) return;
-      
-      // เรียงข้อมูลตามเวลา (หากคอลัมน์แรกเป็น timestamp)
-      const sortedData = [...data].sort((a, b) => new Date(a[0]) - new Date(b[0]));
-      
-      // แสดงข้อมูลล่าสุด
-      const latest = sortedData[sortedData.length - 1];
-      document.getElementById('latestData').innerHTML = `
-        <p><strong>Last Update:</strong> ${latest[0]}</p>
-        <p><strong>pH:</strong> ${latest[1]}</p>
-        <p><strong>TDS:</strong> ${latest[2]} ppm</p>
-        <p><strong>Turbidity:</strong> ${latest[3]} NTU</p>
-      `;
-      
-      // แสดงตารางข้อมูล
-      const tableBody = document.querySelector('#dataTable tbody');
-      tableBody.innerHTML = '';
-      sortedData.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
-        tableBody.appendChild(tr);
-      });
-      
-      // สร้างกราฟ
-      createCharts(sortedData);
-    }
-    
-    // ฟังก์ชันสร้างกราฟ
-    function createCharts(data) {
-      const labels = data.map(row => row[0]);
-      const phData = data.map(row => row[1]);
-      const tdsData = data.map(row => row[2]);
-      
-      // pH Chart
-      new Chart(document.getElementById('phChart'), {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'pH Level',
-            data: phData,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }]
+    <script>
+        // ฟังก์ชันสำหรับโหลดข้อมูล
+        function loadData() {
+            // ในที่นี้เป็นข้อมูลตัวอย่าง
+            // ในสภาพแวดล้อมจริงควรดึงข้อมูลจาก API
+            
+            // อัพเดทค่า
+            document.getElementById('phValue').textContent = '7.1';
+            document.getElementById('tdsValue').textContent = '315 ppm';
+            document.getElementById('turbidityValue').textContent = '5.3 NTU';
+            
+            // อัพเดทตาราง
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = `
+                <tr>
+                    <td>${new Date().toLocaleTimeString()}</td>
+                    <td>7.1</td>
+                    <td>315</td>
+                    <td>5.3</td>
+                    <td><span class="status-indicator good"></span> ปกติ</td>
+                </tr>
+                <tr>
+                    <td>${new Date(Date.now() - 3600000).toLocaleTimeString()}</td>
+                    <td>7.2</td>
+                    <td>320</td>
+                    <td>5.1</td>
+                    <td><span class="status-indicator good"></span> ปกติ</td>
+                </tr>
+                <tr>
+                    <td>${new Date(Date.now() - 7200000).toLocaleTimeString()}</td>
+                    <td>7.0</td>
+                    <td>310</td>
+                    <td>5.5</td>
+                    <td><span class="status-indicator good"></span> ปกติ</td>
+                </tr>
+            `;
         }
-      });
-      
-      // TDS Chart
-      new Chart(document.getElementById('tdsChart'), {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'TDS (ppm)',
-            data: tdsData,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)'
-          }]
-        }
-      });
-    }
-    
-    // เรียกใช้เมื่อโหลดหน้าเว็บ
-    document.addEventListener('DOMContentLoaded', async () => {
-      const data = await fetchData();
-      if (data) {
-        displayData(data);
-      } else {
-        document.getElementById('latestData').innerHTML = 
-          '<p>Unable to load data. Please try again later.</p>';
-      }
-    });
-  </script>
+        
+        // โหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
+        window.onload = loadData;
+    </script>
 </body>
 </html>
