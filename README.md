@@ -186,7 +186,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-fish"></i>  </h1>
+            <h1><i class="fas fa-fish"></i> Fish-smile </h1>
             <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
