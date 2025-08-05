@@ -3,44 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aqua Guard Dashboard</title>
+  <title>Fish-Smile Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f5f5f5;
+      background: linear-gradient(135deg, #1a2980, #26d0ce);
+      color: white;
+      min-height: 100vh;
     }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
     .dashboard {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
+    
     .card {
-      background: white;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
       padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: transform 0.3s ease;
     }
+    
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    
     .chart-container {
       position: relative;
-      height: 300px;
+      height: 250px;
       width: 100%;
     }
-    table {
+    
+    .data-table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 15px;
     }
-    th, td {
-      padding: 8px;
+    
+    .data-table th, .data-table td {
+      padding: 12px;
       text-align: left;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .data-table th {
+      background-color: rgba(255,255,255,0.1);
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .status-good {
+      background-color: #4CAF50;
+    }
+    
+    .status-warning {
+      background-color: #FFC107;
+    }
+    
+    .status-danger {
+      background-color: #F44336;
+    }
+    
+    .refresh-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: all 0.3s;
+    }
+    
+    .refresh-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Aqua Guard Monitoring</h1>
+  <div class="header">
+    <h1>Fish-Smile Monitoring</h1>
+    <p>Real-time water quality dashboard</p>
+  </div>
   
   <div class="dashboard">
     <div class="card">
@@ -48,6 +125,7 @@
       <div class="chart-container">
         <canvas id="phChart"></canvas>
       </div>
+      <div id="phStatus" style="margin-top: 15px;"></div>
     </div>
     
     <div class="card">
@@ -55,23 +133,34 @@
       <div class="chart-container">
         <canvas id="tdsChart"></canvas>
       </div>
+      <div id="tdsStatus" style="margin-top: 15px;"></div>
+    </div>
+    
+    <div class="card">
+      <h2>Turbidity</h2>
+      <div class="chart-container">
+        <canvas id="turbidityChart"></canvas>
+      </div>
+      <div id="turbidityStatus" style="margin-top: 15px;"></div>
     </div>
     
     <div class="card">
       <h2>Latest Readings</h2>
-      <div id="latestData"></div>
+      <div id="latestData" style="font-size: 1.1rem;"></div>
+      <button class="refresh-btn" onclick="loadData()">Refresh Data</button>
     </div>
     
-    <div class="card">
-      <h2>All Data</h2>
+    <div class="card" style="grid-column: 1 / -1;">
+      <h2>Historical Data</h2>
       <div style="overflow-x: auto;">
-        <table id="dataTable">
+        <table class="data-table" id="dataTable">
           <thead>
             <tr>
               <th>Timestamp</th>
               <th>pH</th>
-              <th>TDS</th>
-              <th>Turbidity</th>
+              <th>TDS (ppm)</th>
+              <th>Turbidity (NTU)</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -81,96 +170,3 @@
   </div>
 
   <script>
-    // ฟังก์ชันดึงข้อมูล
-    async function fetchData() {
-      try {
-        // ใช้วิธีที่ 1 หรือ 2 ที่กล่าวมา
-        const response = await fetch('YOUR_API_ENDPOINT');
-        const data = await response.json();
-        return data.values || data;
-      } catch (error) {
-        console.error('Error:', error);
-        return null;
-      }
-    }
-
-    // ฟังก์ชันแสดงข้อมูล
-    function displayData(data) {
-      if (!data || data.length === 0) return;
-      
-      // เรียงข้อมูลตามเวลา (หากคอลัมน์แรกเป็น timestamp)
-      const sortedData = [...data].sort((a, b) => new Date(a[0]) - new Date(b[0]));
-      
-      // แสดงข้อมูลล่าสุด
-      const latest = sortedData[sortedData.length - 1];
-      document.getElementById('latestData').innerHTML = `
-        <p><strong>Last Update:</strong> ${latest[0]}</p>
-        <p><strong>pH:</strong> ${latest[1]}</p>
-        <p><strong>TDS:</strong> ${latest[2]} ppm</p>
-        <p><strong>Turbidity:</strong> ${latest[3]} NTU</p>
-      `;
-      
-      // แสดงตารางข้อมูล
-      const tableBody = document.querySelector('#dataTable tbody');
-      tableBody.innerHTML = '';
-      sortedData.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
-        tableBody.appendChild(tr);
-      });
-      
-      // สร้างกราฟ
-      createCharts(sortedData);
-    }
-    
-    // ฟังก์ชันสร้างกราฟ
-    function createCharts(data) {
-      const labels = data.map(row => row[0]);
-      const phData = data.map(row => row[1]);
-      const tdsData = data.map(row => row[2]);
-      
-      // pH Chart
-      new Chart(document.getElementById('phChart'), {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'pH Level',
-            data: phData,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }]
-        }
-      });
-      
-      // TDS Chart
-      new Chart(document.getElementById('tdsChart'), {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'TDS (ppm)',
-            data: tdsData,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)'
-          }]
-        }
-      });
-    }
-    
-    // เรียกใช้เมื่อโหลดหน้าเว็บ
-    document.addEventListener('DOMContentLoaded', async () => {
-      const data = await fetchData();
-      if (data) {
-        displayData(data);
-      } else {
-        document.getElementById('latestData').innerHTML = 
-          '<p>Unable to load data. Please try again later.</p>';
-      }
-    });
-  </script>
-</body>
-</html>
