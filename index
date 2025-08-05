@@ -122,7 +122,7 @@
     
     <div class="devices-container">
         <!-- อุปกรณ์ที่ 1 -->
-        <div class="device-card" onclick="window.location.href='dashboard.html?device=1'">
+        <div class="device-card" onclick="window.location.href='Fish-Smile01.html?device=1'">
             <div class="device-icon">
                 <i class="fas fa-water"></i>
             </div>
