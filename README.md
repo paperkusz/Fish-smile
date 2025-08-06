@@ -382,12 +382,22 @@
 
     <script>
         // URL ของ Google Apps Script Web App
-        const API_URL = "https://script.google.com/macros/s/AKfycbylzCVh6uAy-P6fKzH6T9DiEBNAFcpr8iGhlXpwIzwkr29rZbc2FKRBEQlbN1MiF4P55w/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxJQmQDMNmAOei0UNK1TFWsZy0EWHuAHtxm0CGPlumVL31a16NyPc_zpUXBXPqFSP7Bug/exec";
         
         // ฟังก์ชันสำหรับโหลดข้อมูล
         async function loadData() {
-            const loader = document.getElementById('loader');
-            const dashboard = document.getElementById('dashboard');
+            const formattedData = data.map(item => {
+            const [datePart, timePart] = item['วันเวลา'].split(', ');
+            const [day, month, year] = datePart.split('/').map(Number);
+            const [hours, minutes, seconds] = timePart.split(':').map(Number);
+  
+        return {
+            timestamp: new Date(year + 2000, month - 1, day, hours, minutes, seconds),
+            pH: parseFloat(item['pH']),
+            tds: parseFloat(item['TDS']),
+            turbidity: parseFloat(item['ความขุ่น'])
+            };
+            });
             
             // แสดง loading spinner
             loader.style.display = 'block';
