@@ -119,7 +119,7 @@
     </div>
     
     <!-- อุปกรณ์ที่ 1 -->
-    <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-smile/Fish-Smile01.html'">
+    <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile01.html'">
     <div class="device-icon">
         <i class="fas fa-water"></i>
     </div>
