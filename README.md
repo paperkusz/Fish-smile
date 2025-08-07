@@ -118,17 +118,17 @@
         <p>เลือกอุปกรณ์ที่ต้องการตรวจสอบคุณภาพน้ำ</p>
     </div>
     
-    <!-- อุปกรณ์ที่ 1 -->
-    <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile01.html'">
-    <div class="device-icon">
-        <i class="fas fa-water"></i>
-    </div>
-    <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
-    <p class="device-location">สถานะของคุณภาพน้ำ</p>
-    <div class="device-status status-normal">
-        <i class="fas fa-check-circle"></i> ปกติ
-    </div>
-    </div>
+        <!-- อุปกรณ์ที่ 1 -->
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile01.html'">
+            <div class="device-icon">
+                <i class="fas fa-water"></i>
+            </div>
+            <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
+            <p class="device-location">สถานะของคุณภาพน้ำ</p>
+            <div class="device-status status-normal">
+                <i class="fas fa-check-circle"></i> ปกติ
+            </div>
+        </div>
         
         <!-- อุปกรณ์ที่ 2 -->
         <div class="device-card" onclick="window.location.href='dashboard.html?device=2'">
