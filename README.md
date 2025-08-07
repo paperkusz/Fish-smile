@@ -119,7 +119,7 @@
     </div>
     
         <!-- อุปกรณ์ที่ 1 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile01.html'">
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile01.html'">
             <div class="device-icon">
                 <i class="fas fa-water"></i>
             </div>
@@ -131,7 +131,7 @@
         </div>
         
         <!-- อุปกรณ์ที่ 2 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile02.html'">
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile02.html'">
             <div class="device-icon">
                 <i class="fas fa-fish"></i>
             </div>
@@ -143,7 +143,7 @@
         </div>
         
         <!-- อุปกรณ์ที่ 3 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile03.html'">
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile03.html'">
             <div class="device-icon">
                 <i class="fas fa-tint"></i>
             </div>
@@ -155,7 +155,7 @@
         </div>
         
         <!-- อุปกรณ์ที่ 4 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile04.html'">
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile04.html'">
             <div class="device-icon">
                 <i class="fas fa-cloud-rain"></i>
             </div>
