@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Fish-Smile Monitoring System</title>
     <style>
         * {
             margin: 0;
@@ -33,50 +34,59 @@
         .devices-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
         
         .device-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             text-align: center;
             cursor: pointer;
             border: 2px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .device-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 20px rgba(30, 136, 229, 0.2);
             border-color: #1e88e5;
         }
         
         .device-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: #1e88e5;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .device-name {
             font-size: 1.5rem;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #2c3e50;
         }
         
         .device-location {
             color: #7f8c8d;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
         }
         
         .device-status {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-top: auto;
         }
         
         .status-normal {
@@ -96,18 +106,24 @@
         
         .footer {
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
+            margin-top: 50px;
+            padding: 25px;
             color: #7f8c8d;
+            font-size: 0.9rem;
         }
         
         @media (max-width: 768px) {
             .devices-container {
                 grid-template-columns: 1fr;
+                padding: 10px;
             }
             
             .header h1 {
                 font-size: 1.5rem;
+            }
+            
+            .device-card {
+                padding: 20px;
             }
         }
     </style>
@@ -115,52 +131,61 @@
 <body>
     <div class="header">
         <h1><i class="fas fa-fish"></i> Fish-Smile Monitoring System</h1>
-        <p>เลือกอุปกรณ์ที่ต้องการตรวจสอบคุณภาพน้ำ</p>
+        <p>เลือกบ่อปลาที่ต้องการตรวจสอบคุณภาพน้ำ</p>
     </div>
     
-        <!-- อุปกรณ์ที่ 1 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile01.html'">
-            <div class="device-icon">
-                <i class="fas fa-water"></i>
+    <div class="devices-container">
+        <!-- บ่อปลาที่ 1 -->
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-smile/Fish-Smile01.html'">
+            <div>
+                <div class="device-icon">
+                    <i class="fas fa-water"></i>
+                </div>
+                <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
+                <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
-            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-normal">
-                <i class="fas fa-check-circle"></i> ปกติ
+                <i class="fas fa-check-circle"></i> สภาพน้ำปกติ
             </div>
         </div>
         
-        <!-- อุปกรณ์ที่ 2 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile02.html'">
-            <div class="device-icon">
-                <i class="fas fa-fish"></i>
+        <!-- บ่อปลาที่ 2 -->
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-smile/Fish-Smile02.html'">
+            <div>
+                <div class="device-icon">
+                    <i class="fas fa-fish"></i>
+                </div>
+                <h3 class="device-name">บ่อปลาที่ 2 (ปลานิล)</h3>
+                <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <h3 class="device-name">บ่อปลาที่ 2 (ปลานิล)</h3>
-            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-warning">
                 <i class="fas fa-exclamation-triangle"></i> ควรตรวจสอบ
             </div>
         </div>
         
-        <!-- อุปกรณ์ที่ 3 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile03.html'">
-            <div class="device-icon">
-                <i class="fas fa-tint"></i>
+        <!-- บ่อปลาที่ 3 -->
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-smile/Fish-Smile03.html'">
+            <div>
+                <div class="device-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <h3 class="device-name">บ่อปลาที่ 3 (ปลาดุก)</h3>
+                <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <h3 class="device-name">บ่อปลาที่ 3 (ปลาดุก)</h3>
-            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-normal">
-                <i class="fas fa-check-circle"></i> ปกติ
+                <i class="fas fa-check-circle"></i> สภาพน้ำปกติ
             </div>
         </div>
         
-        <!-- อุปกรณ์ที่ 4 -->
-        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-Smile/Fish-Smile04.html'">
-            <div class="device-icon">
-                <i class="fas fa-cloud-rain"></i>
+        <!-- บ่ออนุบาลลูกปลา -->
+        <div class="device-card" onclick="window.location.href='https://paperkusz.github.io/Fish-smile/Fish-Smile04.html'">
+            <div>
+                <div class="device-icon">
+                    <i class="fas fa-cloud-rain"></i>
+                </div>
+                <h3 class="device-name">บ่ออนุบาลลูกปลา</h3>
+                <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <h3 class="device-name">บ่ออนุบาลลูกปลา</h3>
-            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-danger">
                 <i class="fas fa-times-circle"></i> ต้องแก้ไขด่วน
             </div>
