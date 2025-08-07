@@ -169,7 +169,7 @@
     </div>
     
     <div class="footer">
-        <p>ระบบ Fish-Smile Monitoring System | © 2023</p>
+        <p>Protpittayapayat School | © 2025</p>
     </div>
 
     <script>
