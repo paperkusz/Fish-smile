@@ -124,8 +124,8 @@
             <div class="device-icon">
                 <i class="fas fa-water"></i>
             </div>
-            <h3 class="device-name">บ่อปลาหมอไทย</h3>
-            <p class="device-location">ฟาร์มสวนน้ำใจ, จ.ปทุมธานี</p>
+            <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
+            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-normal">
                 <i class="fas fa-check-circle"></i> ปกติ
             </div>
@@ -136,8 +136,8 @@
             <div class="device-icon">
                 <i class="fas fa-fish"></i>
             </div>
-            <h3 class="device-name">บ่อปลานิล</h3>
-            <p class="device-location">ฟาร์มน้ำใส, จ.นครปฐม</p>
+            <h3 class="device-name">บ่อปลาที่ 2 (ปลานิล)</h3>
+            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-warning">
                 <i class="fas fa-exclamation-triangle"></i> ควรตรวจสอบ
             </div>
@@ -148,8 +148,8 @@
             <div class="device-icon">
                 <i class="fas fa-tint"></i>
             </div>
-            <h3 class="device-name">บ่อปลาดุก</h3>
-            <p class="device-location">ฟาร์มปลาเศรษฐกิจ, จ.สมุทรสาคร</p>
+            <h3 class="device-name">บ่อปลาที่ 3 (ปลาดุก)</h3>
+            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-normal">
                 <i class="fas fa-check-circle"></i> ปกติ
             </div>
@@ -161,7 +161,7 @@
                 <i class="fas fa-cloud-rain"></i>
             </div>
             <h3 class="device-name">บ่ออนุบาลลูกปลา</h3>
-            <p class="device-location">ฟาร์มสวนน้ำใจ, จ.ปทุมธานี</p>
+            <p class="device-location">สถานะของคุณภาพน้ำ</p>
             <div class="device-status status-danger">
                 <i class="fas fa-times-circle"></i> ต้องแก้ไขด่วน
             </div>
