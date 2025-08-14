@@ -325,46 +325,45 @@
         
         <div class="dashboard" id="dashboard">
             <div class="card">
-                <h2><i class="fas fa-thermometer-half"></i> อุณหภูมิ</h2>
-                <div class="value" id="tempValue">20.89 <span class="unit">°C</span></div>
+                <h2><i class="fas fa-tint"></i> ค่า pH</h2>
+                <div class="value" id="phValue">7.24 <span class="unit">pH</span></div>
                 <div class="status">
                     <div class="status-indicator good"></div>
-                    <span>อยู่ในเกณฑ์ปกติ (20-30°C)</span>
+                    <span>อยู่ในเกณฑ์ปกติ (6.5-8.5)</span>
                 </div>
-                <div class="chart-container" id="tempChart"></div>
-            </div>
-            
-            <div class="card">
-                <h2><i class="fas fa-tint"></i> ความชื้น</h2>
-                <div class="value" id="humidityValue">0 <span class="unit">%</span></div>
-                <div class="status">
-                    <div class="status-indicator warning"></div>
-                    <span>ควรตรวจสอบ (ปกติ 40-80%)</span>
-                </div>
-                <div class="chart-container" id="humidityChart"></div>
+                <div class="chart-container" id="phChart"></div>
             </div>
             
             <div class="card">
                 <h2><i class="fas fa-water"></i> ค่า TDS</h2>
-                <div class="value" id="tdsValue">2952.62 <span class="unit">ppm</span></div>
+                <div class="value" id="tdsValue">267.8 <span class="unit">ppm</span></div>
                 <div class="status">
-                    <div class="status-indicator danger"></div>
-                    <span>อยู่นอกเกณฑ์ปกติ (100-500 ppm)</span>
+                    <div class="status-indicator good"></div>
+                    <span>อยู่ในเกณฑ์ปกติ (100-500 ppm)</span>
                 </div>
                 <div class="chart-container" id="tdsChart"></div>
+            </div>
+            
+            <div class="card">
+                <h2><i class="fas fa-cloud"></i> ความขุ่น</h2>
+                <div class="value" id="turbidityValue">12.3 <span class="unit">NTU</span></div>
+                <div class="status">
+                    <div class="status-indicator danger"></div>
+                    <span>อยู่นอกเกณฑ์ปกติ (0-10 NTU)</span>
+                </div>
+                <div class="chart-container" id="turbidityChart"></div>
             </div>
         </div>
         
         <!-- ส่วนวิเคราะห์ด้วย AI -->
         <div class="analysis-container" id="aiAnalysisContainer">
             <h2><i class="fas fa-brain"></i> การวิเคราะห์คุณภาพน้ำด้วย AI</h2>
-            <div class="analysis-content analysis-danger">
-                <p><strong>สถานะน้ำ:</strong> อันตราย</p>
+            <div class="analysis-content analysis-warning">
+                <p><strong>สถานะน้ำ:</strong> ต้องระวัง</p>
                 <p><strong>ปัญหาที่พบ:</strong></p>
                 <ul>
-                    <li>ค่า TDS (2952.62 ppm) สูงเกินเกณฑ์มาก (>500 ppm)</li>
-                    <li>ความชื้น (0%) ต่ำเกินไป (ปกติ 40-80%)</li>
-                    <li>อุณหภูมิ (20.89°C) อยู่ในเกณฑ์ปกติ</li>
+                    <li>ค่าความขุ่น (12.3 NTU) สูงเกินเกณฑ์ (>10 NTU)</li>
+                    <li>ค่า TDS มีความผันผวนในช่วง 238.9-269.3 ppm</li>
                 </ul>
                 
                 <div class="forecast-chart-container">
@@ -374,11 +373,10 @@
             <div class="recommendation">
                 <p><strong>คำแนะนำ:</strong></p>
                 <ul>
-                    <li>ต้องเปลี่ยนน้ำทันทีเนื่องจากค่า TDS สูงเกินไป</li>
-                    <li>ตรวจสอบระบบวัดความชื้นเนื่องจากค่าต่ำผิดปกติ</li>
-                    <li>ตรวจสอบแหล่งที่มาของแร่ธาตุที่ทำให้ค่า TDS สูง</li>
-                    <li>พิจารณาใช้ระบบกรองน้ำแบบ Reverse Osmosis</li>
-                    <li>ตรวจสอบระบบเติมอากาศและระบบหมุนเวียนน้ำ</li>
+                    <li>ควรตรวจสอบระบบกรองน้ำและทำความสะอาดทันที</li>
+                    <li>พิจารณาใช้สารช่วยตกตะกอนเพื่อลดความขุ่น</li>
+                    <li>ตรวจสอบแหล่งที่มาของความขุ่น เช่น อาหารปลาหรือสิ่งปฏิกูล</li>
+                    <li>ติดตามค่า TDS อย่างใกล้ชิดเนื่องจากมีความผันผวน</li>
                 </ul>
             </div>
         </div>
@@ -389,82 +387,82 @@
                 <thead>
                     <tr>
                         <th>วันที่/เวลา</th>
-                        <th>อุณหภูมิ (°C)</th>
-                        <th>ความชื้น (%)</th>
-                        <th>ค่า TDS (ppm)</th>
+                        <th>ค่า pH</th>
+                        <th>ค่า TDS</th>
+                        <th>ความขุ่น</th>
                         <th>สถานะ</th>
                     </tr>
                 </thead>
                 <tbody id="dataTableBody">
                     <tr>
-                        <td>7/8/2025, 21:01:55</td>
-                        <td>20.32</td>
-                        <td>13.9</td>
-                        <td>2819.16</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td>7/8/2025, 20:06</td>
+                        <td>7.24</td>
+                        <td>267.8</td>
+                        <td>12.3</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:01:47</td>
-                        <td>20.28</td>
-                        <td>10.7</td>
-                        <td>2819.16</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td>7/8/2025, 20:06</td>
+                        <td>7.22</td>
+                        <td>265.6</td>
+                        <td>12.2</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:01:38</td>
-                        <td>19.7</td>
-                        <td>68.5</td>
-                        <td>2726.33</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td>7/8/2025, 20:06</td>
+                        <td>7.24</td>
+                        <td>257.3</td>
+                        <td>12.2</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:01:30</td>
-                        <td>20.52</td>
-                        <td>0</td>
-                        <td>2858.81</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td>7/8/2025, 20:06</td>
+                        <td>7.26</td>
+                        <td>254.5</td>
+                        <td>12.4</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:01:21</td>
-                        <td>20.38</td>
+                        <td>7/8/2025, 20:05</td>
+                        <td>7.24</td>
+                        <td>258.1</td>
+                        <td>11.9</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
+                    </tr>
+                    <tr>
+                        <td>7/8/2025, 20:05</td>
+                        <td>7.25</td>
+                        <td>248.6</td>
                         <td>11.8</td>
-                        <td>2818.2</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:01:12</td>
-                        <td>20.51</td>
+                        <td>7/8/2025, 20:05</td>
+                        <td>7.23</td>
+                        <td>251.9</td>
+                        <td>11.8</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
+                    </tr>
+                    <tr>
+                        <td>7/8/2025, 20:05</td>
+                        <td>7.25</td>
+                        <td>247.7</td>
                         <td>11.4</td>
-                        <td>2801.76</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:01:03</td>
-                        <td>19.78</td>
-                        <td>51.3</td>
-                        <td>2841.41</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td>7/8/2025, 20:05</td>
+                        <td>7.24</td>
+                        <td>256.2</td>
+                        <td>11.2</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                     <tr>
-                        <td>7/8/2025, 21:00:54</td>
-                        <td>20.16</td>
-                        <td>24.2</td>
-                        <td>2876.22</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
-                    </tr>
-                    <tr>
-                        <td>7/8/2025, 21:00:46</td>
-                        <td>20.8</td>
-                        <td>0</td>
-                        <td>2853.98</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
-                    </tr>
-                    <tr>
-                        <td>7/8/2025, 21:00:37</td>
-                        <td>20.89</td>
-                        <td>0</td>
-                        <td>2890.73</td>
-                        <td><div class="status-indicator danger"></div> TDS สูง</td>
+                        <td>7/8/2025, 20:05</td>
+                        <td>7.23</td>
+                        <td>251.3</td>
+                        <td>11.5</td>
+                        <td><div class="status-indicator danger"></div> ความขุ่นสูง</td>
                     </tr>
                 </tbody>
             </table>
@@ -481,109 +479,42 @@
     <script>
         // ข้อมูลตัวอย่างจากที่คุณให้มา
         const sampleData = [
-            { timestamp: '7/8/2025, 20:41:57', temperature: 20.86, humidity: 0, tds: 2864.62 },
-            { timestamp: '7/8/2025, 20:42:05', temperature: 19.98, humidity: 38.9, tds: 2860.75 },
-            { timestamp: '7/8/2025, 20:42:14', temperature: 20.61, humidity: 0, tds: 2925.54 },
-            { timestamp: '7/8/2025, 20:42:22', temperature: 19.16, humidity: 108.4, tds: 2703.12 },
-            { timestamp: '7/8/2025, 20:42:32', temperature: 20.89, humidity: 0, tds: 2922.64 },
-            { timestamp: '7/8/2025, 20:42:40', temperature: 19.16, humidity: 108.8, tds: 2725.36 },
-            { timestamp: '7/8/2025, 20:42:48', temperature: 19.31, humidity: 97, tds: 2763.08 },
-            { timestamp: '7/8/2025, 20:43:00', temperature: 20.44, humidity: 2.1, tds: 2829.8 },
-            { timestamp: '7/8/2025, 20:43:08', temperature: 19.29, humidity: 102.7, tds: 2693.45 },
-            { timestamp: '7/8/2025, 20:43:17', temperature: 20.81, humidity: 0, tds: 2882.02 },
-            { timestamp: '7/8/2025, 20:43:27', temperature: 20.57, humidity: 0, tds: 2860.75 },
-            { timestamp: '7/8/2025, 20:43:35', temperature: 19.45, humidity: 85.6, tds: 2793.05 },
-            { timestamp: '7/8/2025, 20:43:43', temperature: 19.21, humidity: 106.3, tds: 2690.55 },
-            { timestamp: '7/8/2025, 20:43:52', temperature: 20.32, humidity: 12.5, tds: 2819.16 },
-            { timestamp: '7/8/2025, 20:44:06', temperature: 20.1, humidity: 25, tds: 2882.02 },
-            { timestamp: '7/8/2025, 20:44:12', temperature: 20.4, humidity: 10.3, tds: 2825.93 },
-            { timestamp: '7/8/2025, 20:44:20', temperature: 20.34, humidity: 12.5, tds: 2813.36 },
-            { timestamp: '7/8/2025, 20:44:29', temperature: 19.95, humidity: 46, tds: 2749.54 },
-            { timestamp: '7/8/2025, 20:44:37', temperature: 20.32, humidity: 11.8, tds: 2815.3 },
-            { timestamp: '7/8/2025, 20:44:46', temperature: 19.24, humidity: 107.3, tds: 2699.25 },
-            { timestamp: '7/8/2025, 20:44:58', temperature: 20.65, humidity: 0, tds: 2820.13 },
-            { timestamp: '7/8/2025, 20:45:06', temperature: 20.46, humidity: 5.7, tds: 2825.93 },
-            { timestamp: '7/8/2025, 20:45:14', temperature: 19.25, humidity: 102.3, tds: 2751.47 },
-            { timestamp: '7/8/2025, 20:45:23', temperature: 20.89, humidity: 0, tds: 2952.62 },
-            { timestamp: '7/8/2025, 20:45:31', temperature: 19.67, humidity: 68.5, tds: 2720.53 },
-            { timestamp: '7/8/2025, 20:45:40', temperature: 20, humidity: 45.6, tds: 2746.64 },
-            { timestamp: '7/8/2025, 20:45:48', temperature: 20.66, humidity: 0, tds: 2874.29 },
-            { timestamp: '7/8/2025, 20:45:57', temperature: 20.37, humidity: 11.8, tds: 2816.26 },
-            { timestamp: '7/8/2025, 20:46:06', temperature: 20.66, humidity: 0, tds: 2851.08 },
-            { timestamp: '7/8/2025, 20:46:16', temperature: 19.57, humidity: 79.5, tds: 2718.59 },
-            { timestamp: '7/8/2025, 20:46:26', temperature: 19.14, humidity: 108.4, tds: 2730.2 },
-            { timestamp: '7/8/2025, 20:46:36', temperature: 19.22, humidity: 110.9, tds: 2706.02 },
-            { timestamp: '7/8/2025, 20:46:45', temperature: 19.41, humidity: 86.6, tds: 2782.42 },
-            { timestamp: '7/8/2025, 20:46:55', temperature: 20.89, humidity: 0, tds: 2927.47 },
-            { timestamp: '7/8/2025, 20:47:13', temperature: 19.66, humidity: 70.6, tds: 2720.53 },
-            { timestamp: '7/8/2025, 20:47:15', temperature: 20.87, humidity: 0, tds: 2864.62 },
-            { timestamp: '7/8/2025, 20:47:26', temperature: 20.34, humidity: 12.5, tds: 2814.33 },
-            { timestamp: '7/8/2025, 20:47:36', temperature: 19.17, humidity: 108.8, tds: 2727.3 },
-            { timestamp: '7/8/2025, 20:47:45', temperature: 20.73, humidity: 0, tds: 2876.22 },
-            { timestamp: '7/8/2025, 20:47:55', temperature: 20, humidity: 44.9, tds: 2748.57 },
-            { timestamp: '7/8/2025, 20:48:03', temperature: 19.95, humidity: 51.3, tds: 2738.9 },
-            { timestamp: '7/8/2025, 20:48:12', temperature: 19.24, humidity: 108.8, tds: 2724.4 },
-            { timestamp: '7/8/2025, 20:48:21', temperature: 19.66, humidity: 66.3, tds: 2826.9 },
-            { timestamp: '7/8/2025, 20:48:30', temperature: 19.22, humidity: 107, tds: 2736.97 },
-            { timestamp: '7/8/2025, 20:48:38', temperature: 19.32, humidity: 92.7, tds: 2770.81 },
-            { timestamp: '7/8/2025, 20:48:47', temperature: 19.8, humidity: 65.3, tds: 2735.03 },
-            { timestamp: '7/8/2025, 20:48:55', temperature: 20.44, humidity: 12.8, tds: 2819.16 },
-            { timestamp: '7/8/2025, 20:49:03', temperature: 20.12, humidity: 23.5, tds: 2880.09 },
-            { timestamp: '7/8/2025, 20:49:12', temperature: 20.48, humidity: 4.6, tds: 2826.9 },
-            { timestamp: '7/8/2025, 20:49:21', temperature: 20.89, humidity: 0, tds: 2896.53 },
-            { timestamp: '7/8/2025, 20:49:30', temperature: 20.45, humidity: 0, tds: 2912 },
-            { timestamp: '7/8/2025, 20:49:38', temperature: 19.16, humidity: 109.1, tds: 2710.86 },
-            { timestamp: '7/8/2025, 20:49:47', temperature: 20.59, humidity: 0, tds: 2870.42 },
-            { timestamp: '7/8/2025, 20:49:56', temperature: 20.89, humidity: 0, tds: 2896.53 },
-            { timestamp: '7/8/2025, 20:50:04', temperature: 19.34, humidity: 92.4, tds: 2769.85 },
-            { timestamp: '7/8/2025, 20:50:12', temperature: 20.02, humidity: 43.9, tds: 2757.27 },
-            { timestamp: '7/8/2025, 20:50:22', temperature: 20.4, humidity: 12.5, tds: 2818.2 },
-            { timestamp: '7/8/2025, 20:50:31', temperature: 19.31, humidity: 97, tds: 2772.75 },
-            { timestamp: '7/8/2025, 20:50:40', temperature: 19.96, humidity: 48.9, tds: 2750.51 },
-            { timestamp: '7/8/2025, 20:50:48', temperature: 20.5, humidity: 7.5, tds: 2802.73 },
-            { timestamp: '7/8/2025, 20:51:01', temperature: 20.84, humidity: 0, tds: 2885.89 },
-            { timestamp: '7/8/2025, 20:51:10', temperature: 20.89, humidity: 0, tds: 2948.75 },
-            { timestamp: '7/8/2025, 20:51:21', temperature: 19.51, humidity: 84.2, tds: 2798.86 },
-            { timestamp: '7/8/2025, 20:51:31', temperature: 19.23, humidity: 105.2, tds: 2736.97 },
-            { timestamp: '7/8/2025, 20:51:42', temperature: 20.81, humidity: 0, tds: 2946.81 },
-            { timestamp: '7/8/2025, 20:51:52', temperature: 20.89, humidity: 0, tds: 2946.81 },
-            { timestamp: '7/8/2025, 20:52:03', temperature: 20.43, humidity: 0.4, tds: 2834.64 },
-            { timestamp: '7/8/2025, 20:52:13', temperature: 19.28, humidity: 104.5, tds: 2710.86 },
-            { timestamp: '7/8/2025, 20:52:22', temperature: 19.85, humidity: 45.6, tds: 2855.91 },
-            { timestamp: '7/8/2025, 20:52:30', temperature: 20.4, humidity: 6.8, tds: 2829.8 },
-            { timestamp: '7/8/2025, 20:52:39', temperature: 19.22, humidity: 108, tds: 2707.96 },
-            { timestamp: '7/8/2025, 20:52:47', temperature: 20.84, humidity: 0, tds: 2856.88 },
-            { timestamp: '7/8/2025, 20:52:56', temperature: 19.38, humidity: 91.3, tds: 2780.48 },
-            { timestamp: '7/8/2025, 20:53:05', temperature: 19.3, humidity: 104.1, tds: 2699.25 },
-            { timestamp: '7/8/2025, 20:53:15', temperature: 20.75, humidity: 0, tds: 2941.01 },
-            { timestamp: '7/8/2025, 20:53:26', temperature: 20.78, humidity: 0, tds: 2880.09 },
-            { timestamp: '7/8/2025, 20:53:36', temperature: 20.33, humidity: 7.1, tds: 2829.8 },
-            { timestamp: '7/8/2025, 20:53:49', temperature: 20.6, humidity: 0, tds: 2836.57 },
-            { timestamp: '7/8/2025, 20:53:57', temperature: 20.54, humidity: 3.9, tds: 2828.84 },
-            { timestamp: '7/8/2025, 20:54:06', temperature: 20.89, humidity: 0, tds: 2889.76 },
-            { timestamp: '7/8/2025, 20:54:15', temperature: 19.39, humidity: 90.6, tds: 2780.48 },
-            { timestamp: '7/8/2025, 20:54:24', temperature: 20.46, humidity: 6.1, tds: 2824 },
-            { timestamp: '7/8/2025, 20:54:34', temperature: 20.51, humidity: 7.8, tds: 2824 },
-            { timestamp: '7/8/2025, 20:54:42', temperature: 20.7, humidity: 0, tds: 2876.22 },
-            { timestamp: '7/8/2025, 20:54:51', temperature: 20.35, humidity: 10.7, tds: 2819.16 },
-            { timestamp: '7/8/2025, 20:55:00', temperature: 19.23, humidity: 106.6, tds: 2733.1 },
-            { timestamp: '7/8/2025, 20:55:09', temperature: 19.68, humidity: 72, tds: 2717.63 },
-            { timestamp: '7/8/2025, 20:55:19', temperature: 19.38, humidity: 91.3, tds: 2781.45 },
-            { timestamp: '7/8/2025, 20:55:28', temperature: 20.89, humidity: 0, tds: 2891.69 },
-            { timestamp: '7/8/2025, 20:55:36', temperature: 19.19, humidity: 110.5, tds: 2716.66 },
-            { timestamp: '7/8/2025, 20:55:46', temperature: 19.27, humidity: 105.9, tds: 2699.25 },
-            { timestamp: '7/8/2025, 20:55:55', temperature: 19.19, humidity: 103.4, tds: 2736.97 },
-            { timestamp: '7/8/2025, 20:56:03', temperature: 20.61, humidity: 0, tds: 2847.21 },
-            { timestamp: '7/8/2025, 20:56:12', temperature: 19.28, humidity: 103.4, tds: 2752.44 },
-            { timestamp: '7/8/2025, 20:56:20', temperature: 20.45, humidity: 10.3, tds: 2817.23 },
-            { timestamp: '7/8/2025, 20:56:29', temperature: 19.53, humidity: 84.5, tds: 2710.86 },
-            { timestamp: '7/8/2025, 20:56:37', temperature: 20.89, humidity: 0, tds: 2938.11 },
-            { timestamp: '7/8/2025, 20:56:46', temperature: 19.79, humidity: 53.8, tds: 2842.37 },
-            { timestamp: '7/8/2025, 20:56:55', temperature: 20.12, humidity: 39.9, tds: 2768.88 },
-            { timestamp: '7/8/2025, 20:57:03', temperature: 20.81, humidity: 0, tds: 2871.38 },
-            { timestamp: '7/8/2025, 20:57:12', temperature: 20.89, humidity: 0, tds: 2894.59 },
-            { timestamp: '7/8/2025, 20:57:20', temperature: 19.46, humidity: 91.3, tds: 2779.52 },
-            { timestamp: '7/8/2025, 20:57:30', temperature: 20.33, humidity: 11.8, tds: 2821.1 }
+            { timestamp: '7/8/2025, 19:15:22', pH: 7.24, tds: 253.2, turbidity: 12.3 },
+            { timestamp: '7/8/2025, 19:15:23', pH: 7.21, tds: 258, turbidity: 12.3 },
+            { timestamp: '7/8/2025, 19:15:40', pH: 7.23, tds: 269.3, turbidity: 11.6 },
+            { timestamp: '7/8/2025, 19:15:41', pH: 7.26, tds: 258.1, turbidity: 11.4 },
+            { timestamp: '7/8/2025, 19:56:40', pH: 7.24, tds: 256.5, turbidity: 11.8 },
+            { timestamp: '7/8/2025, 19:57:02', pH: 7.23, tds: 253.5, turbidity: 11.2 },
+            { timestamp: '7/8/2025, 20:03:39', pH: 7.23, tds: 253.2, turbidity: 11.2 },
+            { timestamp: '7/8/2025, 20:03:44', pH: 7.24, tds: 260.6, turbidity: 11.4 },
+            { timestamp: '7/8/2025, 20:03:49', pH: 7.27, tds: 238.9, turbidity: 11.6 },
+            { timestamp: '7/8/2025, 20:03:54', pH: 7.23, tds: 243.2, turbidity: 11.9 },
+            { timestamp: '7/8/2025, 20:03:59', pH: 7.21, tds: 252.2, turbidity: 12.3 },
+            { timestamp: '7/8/2025, 20:04:03', pH: 7.24, tds: 245.4, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:04:09', pH: 7.23, tds: 256.2, turbidity: 12.3 },
+            { timestamp: '7/8/2025, 20:04:14', pH: 7.23, tds: 251.4, turbidity: 12.4 },
+            { timestamp: '7/8/2025, 20:04:19', pH: 7.26, tds: 253.3, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:04:23', pH: 7.25, tds: 251.2, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:04:28', pH: 7.24, tds: 249.6, turbidity: 11.8 },
+            { timestamp: '7/8/2025, 20:04:32', pH: 7.23, tds: 252.4, turbidity: 11.9 },
+            { timestamp: '7/8/2025, 20:04:37', pH: 7.24, tds: 254.9, turbidity: 11.9 },
+            { timestamp: '7/8/2025, 20:04:42', pH: 7.24, tds: 247.6, turbidity: 12.1 },
+            { timestamp: '7/8/2025, 20:04:47', pH: 7.25, tds: 246.2, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:04:52', pH: 7.27, tds: 248.3, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:04:58', pH: 7.26, tds: 251.6, turbidity: 11.9 },
+            { timestamp: '7/8/2025, 20:05:03', pH: 7.24, tds: 253.9, turbidity: 11.2 },
+            { timestamp: '7/8/2025, 20:05:12', pH: 7.24, tds: 253.9, turbidity: 11.4 },
+            { timestamp: '7/8/2025, 20:05:19', pH: 7.26, tds: 248.5, turbidity: 11.6 },
+            { timestamp: '7/8/2025, 20:05:25', pH: 7.23, tds: 251.3, turbidity: 11.5 },
+            { timestamp: '7/8/2025, 20:05:32', pH: 7.24, tds: 256.2, turbidity: 11.2 },
+            { timestamp: '7/8/2025, 20:05:39', pH: 7.25, tds: 247.7, turbidity: 11.4 },
+            { timestamp: '7/8/2025, 20:05:45', pH: 7.23, tds: 251.9, turbidity: 11.8 },
+            { timestamp: '7/8/2025, 20:05:52', pH: 7.25, tds: 248.6, turbidity: 11.8 },
+            { timestamp: '7/8/2025, 20:05:57', pH: 7.24, tds: 258.1, turbidity: 11.9 },
+            { timestamp: '7/8/2025, 20:06:03', pH: 7.26, tds: 254.5, turbidity: 12.4 },
+            { timestamp: '7/8/2025, 20:06:10', pH: 7.24, tds: 257.3, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:06:17', pH: 7.22, tds: 265.6, turbidity: 12.2 },
+            { timestamp: '7/8/2025, 20:06:23', pH: 7.24, tds: 267.8, turbidity: 12.3 }
         ];
 
         // ฟังก์ชันสำหรับโหลดข้อมูล
