@@ -356,21 +356,151 @@
         </div>
         
         <!-- ส่วนวิเคราะห์ด้วย AI -->
-        <div class="analysis-container" id="aiAnalysisContainer">
-            <h2><i class="fas fa-brain"></i> การวิเคราะห์คุณภาพน้ำด้วย AI</h2>
-            <div class="analysis-content analysis-danger">
-                <p><strong>สถานะน้ำ:</strong> อันตราย</p>
-                <p><strong>ปัญหาที่พบ:</strong></p>
-                <ul>
-                    <li>ค่า TDS (2952.62 ppm) สูงเกินเกณฑ์มาก (>500 ppm)</li>
-                    <li>ความชื้น (0%) ต่ำเกินไป (ปกติ 40-80%)</li>
-                    <li>อุณหภูมิ (20.89°C) อยู่ในเกณฑ์ปกติ</li>
-                </ul>
-                
-                <div class="forecast-chart-container">
-                    <canvas id="forecastChart"></canvas>
-                </div>
-            </div>
+<div class="forecast-chart-container">
+    <canvas id="tdsForecastChart"></canvas>
+</div>
+
+<script>
+    // สร้างกราฟพยากรณ์ค่า TDS
+    function createTDSForecastChart(data) {
+        const ctx = document.getElementById('tdsForecastChart').getContext('2d');
+        
+        // ใช้ข้อมูล TDS 20 ตัวล่าสุด
+        const tdsData = data.slice(0, 20).map(d => d.tds).reverse();
+        const timestamps = data.slice(0, 20).map(d => 
+            new Date(d.timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})
+        ).reverse();
+        
+        // สร้างข้อมูลพยากรณ์ (ใช้โมเดลเชิงเส้นอย่างง่ายสำหรับตัวอย่าง)
+        const forecastHours = 24; // พยากรณ์ 24 ชั่วโมง
+        const forecastData = [];
+        const lastValue = tdsData[tdsData.length-1];
+        const trend = (tdsData[tdsData.length-1] - tdsData[0]) / tdsData.length;
+        
+        for (let i = 1; i <= forecastHours; i++) {
+            // พยากรณ์ค่า TDS จะเพิ่มขึ้นตามแนวโน้ม + มีการสุ่มเล็กน้อย
+            forecastData.push(lastValue + (trend * i * 5) + (Math.random() * 50 - 25));
+        }
+        
+        const forecastTimestamps = [];
+        for (let i = 1; i <= forecastHours; i++) {
+            forecastTimestamps.push(`+${i} ชม.`);
+        }
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [...timestamps, ...forecastTimestamps],
+                datasets: [
+                    {
+                        label: 'ค่า TDS จริง',
+                        data: [...tdsData, ...Array(forecastHours).fill(null)],
+                        borderColor: '#1e88e5',
+                        backgroundColor: 'rgba(30, 136, 229, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'การพยากรณ์ค่า TDS',
+                        data: [...Array(tdsData.length).fill(null), ...forecastData],
+                        borderColor: '#e53935',
+                        backgroundColor: 'rgba(229, 57, 53, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: true,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'เกณฑ์ปลอดภัยสูงสุด',
+                        data: Array(tdsData.length + forecastHours).fill(500),
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'transparent',
+                        borderWidth: 1,
+                        borderDash: [3, 3]
+                    },
+                    {
+                        label: 'เกณฑ์อันตราย',
+                        data: Array(tdsData.length + forecastHours).fill(1000),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'transparent',
+                        borderWidth: 1,
+                        borderDash: [3, 3]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'แนวโน้มค่า TDS และพยากรณ์ 24 ชั่วโมงข้างหน้า',
+                        font: {
+                            size: 14
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 500,
+                                yMax: 500,
+                                borderColor: 'rgb(46, 204, 113)',
+                                borderWidth: 1,
+                                borderDash: [6, 6],
+                                label: {
+                                    content: 'เกณฑ์ปลอดภัยสูงสุด (500 ppm)',
+                                    enabled: true,
+                                    position: 'right'
+                                }
+                            },
+                            line2: {
+                                type: 'line',
+                                yMin: 1000,
+                                yMax: 1000,
+                                borderColor: 'rgb(231, 76, 60)',
+                                borderWidth: 1,
+                                borderDash: [6, 6],
+                                label: {
+                                    content: 'เกณฑ์อันตราย (1000 ppm)',
+                                    enabled: true,
+                                    position: 'right'
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: Math.min(...tdsData, 500) - 100,
+                        max: Math.max(...tdsData, ...forecastData) + 100,
+                        title: {
+                            display: true,
+                            text: 'ค่า TDS (ppm)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // ในฟังก์ชัน loadData() ให้เพิ่มการเรียกใช้ฟังก์ชันนี้
+    function loadData() {
+        // ... โค้ดเดิม ...
+        createTDSForecastChart(sortedData);
+    }
+</script>
             <div class="recommendation">
                 <p><strong>คำแนะนำ:</strong></p>
                 <ul>
