@@ -144,8 +144,8 @@
                 <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
                 <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <div class="device-status status-normal">
-                <i class="fas fa-check-circle"></i> สภาพน้ำปกติ
+            <div class="device-status status-danger">
+                <i class="fas fa-times-circle"></i> ต้องแก้ไขด่วน
             </div>
         </div>
         
