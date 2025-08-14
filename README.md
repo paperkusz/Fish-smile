@@ -144,8 +144,8 @@
                 <h3 class="device-name">บ่อปลาที่ 1 (ปลาทับทิม)</h3>
                 <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <div class="device-status status-danger">
-                <i class="fas fa-times-circle"></i> ต้องแก้ไขด่วน
+            <div class="device-status status-warning">
+                <i class="fas fa-exclamation-triangle"></i> ควรตรวจสอบ
             </div>
         </div>
         
@@ -158,8 +158,8 @@
                 <h3 class="device-name">บ่อปลาที่ 2 (ปลานิล)</h3>
                 <p class="device-location">ตรวจสอบคุณภาพน้ำและสภาพแวดล้อม</p>
             </div>
-            <div class="device-status status-warning">
-                <i class="fas fa-exclamation-triangle"></i> ควรตรวจสอบ
+            <div class="device-status status-danger">
+                <i class="fas fa-times-circle"></i> ต้องแก้ไขด่วน
             </div>
         </div>
         
