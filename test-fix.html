@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Chart Fix</title>
+    <style>
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .simple-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, #1e88e5, #42a5f5);
+            border-radius: 3px 3px 0 0;
+            min-height: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .skeleton-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
+            margin: 10px 0;
+        }
+        
+        @keyframes skeleton-pulse {
+            0% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Chart Fix Test</h1>
+    
+    <div id="dashboard">
+        <div style="background: white; padding: 20px; margin: 10px 0; border-radius: 10px;">
+            <h2>pH Chart</h2>
+            <div class="chart-container" id="phChart"></div>
+        </div>
+        
+        <div style="background: white; padding: 20px; margin: 10px 0; border-radius: 10px;">
+            <h2>TDS Chart</h2>
+            <div class="chart-container" id="tdsChart"></div>
+        </div>
+        
+        <div style="background: white; padding: 20px; margin: 10px 0; border-radius: 10px;">
+            <h2>Turbidity Chart</h2>
+            <div class="chart-container" id="turbidityChart"></div>
+        </div>
+    </div>
+    
+    <button onclick="testSkeleton()">Test Skeleton Loading</button>
+    <button onclick="testCharts()">Test Chart Creation</button>
+    <button onclick="testFullFlow()">Test Full Flow</button>
+    
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+    
+    <script>
+        function testSkeleton() {
+            console.log('Testing skeleton loading...');
+            SkeletonUtils.showSkeleton();
+        }
+        
+        function testCharts() {
+            console.log('Testing chart creation...');
+            SkeletonUtils.hideSkeleton();
+            
+            // Simulate data
+            const testData = [7.2, 7.1, 7.3, 7.0, 7.4, 7.2, 7.1, 7.3, 7.2, 7.1];
+            const testData2 = [250, 260, 245, 270, 255, 265, 240, 275, 250, 260];
+            const testData3 = [12, 11, 13, 10, 14, 12, 11, 13, 12, 11];
+            
+            ChartUtils.createSimpleChart('phChart', testData, 'pH', null);
+            ChartUtils.createSimpleChart('tdsChart', testData2, 'TDS (ppm)', null);
+            ChartUtils.createSimpleChart('turbidityChart', testData3, 'Turbidity (NTU)', null);
+        }
+        
+        async function testFullFlow() {
+            console.log('Testing full skeleton → chart flow...');
+            
+            // Show skeleton
+            SkeletonUtils.showSkeleton();
+            
+            // Wait 2 seconds
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Hide skeleton and restore structure
+            SkeletonUtils.hideSkeleton();
+            
+            // Restore dashboard structure manually
+            const dashboard = document.getElementById('dashboard');
+            dashboard.innerHTML = `
+                <div style="background: white; padding: 20px; margin: 10px 0; border-radius: 10px;">
+                    <h2>pH Chart</h2>
+                    <div class="chart-container" id="phChart"></div>
+                </div>
+                
+                <div style="background: white; padding: 20px; margin: 10px 0; border-radius: 10px;">
+                    <h2>TDS Chart</h2>
+                    <div class="chart-container" id="tdsChart"></div>
+                </div>
+                
+                <div style="background: white; padding: 20px; margin: 10px 0; border-radius: 10px;">
+                    <h2>Turbidity Chart</h2>
+                    <div class="chart-container" id="turbidityChart"></div>
+                </div>
+            `;
+            
+            // Wait for DOM
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Create charts
+            testCharts();
+        }
+    </script>
+</body>
+</html>
