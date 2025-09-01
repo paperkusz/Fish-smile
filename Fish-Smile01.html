@@ -404,7 +404,7 @@
         <div class="dashboard" id="dashboard">
             <div class="card">
                 <h2><i class="fas fa-tint"></i> ค่า pH</h2>
-                <div class="value" id="phValue">7.24 <span class="unit">pH</span></div>
+                <div class="value" id="phValue">7.22 <span class="unit">pH</span></div>
                 <div class="status">
                     <div class="status-indicator good"></div>
                     <span>อยู่ในเกณฑ์ปกติ (6.5-8.5)</span>
@@ -414,20 +414,20 @@
             
             <div class="card">
                 <h2><i class="fas fa-water"></i> ค่า TDS</h2>
-                <div class="value" id="tdsValue">267.8 <span class="unit">ppm</span></div>
+                <div class="value" id="tdsValue">167.9 <span class="unit">ppm</span></div>
                 <div class="status">
-                    <div class="status-indicator good"></div>
-                    <span>อยู่ในเกณฑ์ปกติ (100-500 ppm)</span>
+                    <div class="status-indicator warning"></div>
+                    <span>ควรระวัง (100-500 ppm)</span>
                 </div>
                 <div class="chart-container" id="tdsChart"></div>
             </div>
             
             <div class="card">
                 <h2><i class="fas fa-cloud"></i> ความขุ่น</h2>
-                <div class="value" id="turbidityValue">12.3 <span class="unit">NTU</span></div>
+                <div class="value" id="turbidityValue">0 <span class="unit">NTU</span></div>
                 <div class="status">
-                    <div class="status-indicator danger"></div>
-                    <span>อยู่นอกเกณฑ์ปกติ (0-10 NTU)</span>
+                    <div class="status-indicator good"></div>
+                    <span>อยู่ในเกณฑ์ปกติ (0-10 NTU)</span>
                 </div>
                 <div class="chart-container" id="turbidityChart"></div>
             </div>
@@ -438,10 +438,11 @@
             <h2><i class="fas fa-brain"></i> การวิเคราะห์คุณภาพน้ำด้วย AI</h2>
             <div class="analysis-content analysis-warning">
                 <p><strong>สถานะน้ำ:</strong> ต้องระวัง</p>
+                <p><strong>อัปเดตล่าสุด:</strong> 24/8/2025, 19:38:29</p>
                 <p><strong>ปัญหาที่พบ:</strong></p>
                 <ul>
-                    <li>ค่าความขุ่น (12.3 NTU) สูงเกินเกณฑ์ (>10 NTU)</li>
-                    <li>ค่า TDS มีความผันผวนในช่วง 238.9-269.3 ppm</li>
+                    <li>ค่า TDS (167.9 ppm) อยู่ในเกณฑ์ที่ควรระวัง</li>
+                    <li>ค่า pH (7.22) และความขุ่น (0 NTU) อยู่ในเกณฑ์ปกติ</li>
                 </ul>
                 
                 <div class="forecast-chart-container">
@@ -451,10 +452,10 @@
             <div class="recommendation">
                 <p><strong>คำแนะนำ:</strong></p>
                 <ul>
-                    <li>ควรตรวจสอบระบบกรองน้ำและทำความสะอาดทันที</li>
-                    <li>พิจารณาใช้สารช่วยตกตะกอนเพื่อลดความขุ่น</li>
-                    <li>ตรวจสอบแหล่งที่มาของความขุ่น เช่น อาหารปลาหรือสิ่งปฏิกูล</li>
-                    <li>ติดตามค่า TDS อย่างใกล้ชิดเนื่องจากมีความผันผวน</li>
+                    <li>ควรตรวจสอบค่า TDS อย่างใกล้ชิด เนื่องจากมีแนวโน้มเพิ่มขึ้น</li>
+                    <li>ติดตามการเปลี่ยนแปลงของค่า pH อย่างสม่ำเสมอ</li>
+                    <li>ตรวจสอบระบบกรองน้ำเพื่อให้แน่ใจว่าทำงานได้อย่างมีประสิทธิภาพ</li>
+                    <li>บันทึกข้อมูลอย่างต่อเนื่องเพื่อติดตามแนวโน้มการเปลี่ยนแปลง</li>
                 </ul>
             </div>
         </div>
@@ -716,6 +717,9 @@
             
             filteredData = sortedData;
             
+            // อัพเดทค่าปัจจุบัน
+            updateCurrentValues(sortedData[0]);
+            
             // อัพเดทกราฟ
             createCharts(sortedData);
             
@@ -725,10 +729,153 @@
             // อัพเดทตารางข้อมูล
             updateDataTable();
             
+            // อัพเดทการวิเคราะห์ AI
+            updateAIAnalysis(sortedData);
+            
             // แสดงการแจ้งเตือนหากมีความขุ่นสูง
             if (sortedData[0].turbidity > 10) {
                 showNotification(1);
             }
+        }
+        
+        // อัพเดทค่าปัจจุบัน
+        function updateCurrentValues(latestData) {
+            document.getElementById('phValue').innerHTML = `${latestData.pH} <span class="unit">pH</span>`;
+            document.getElementById('tdsValue').innerHTML = `${latestData.tds} <span class="unit">ppm</span>`;
+            document.getElementById('turbidityValue').innerHTML = `${latestData.turbidity} <span class="unit">NTU</span>`;
+            
+            // อัพเดทสถานะ
+            updateStatus('ph', latestData.pH);
+            updateStatus('tds', latestData.tds);
+            updateStatus('turbidity', latestData.turbidity);
+        }
+        
+        // อัพเดทสถานะ
+        function updateStatus(type, value) {
+            let statusElement, indicator, text;
+            
+            if (type === 'ph') {
+                statusElement = document.querySelector('#dashboard > div:nth-child(1) .status');
+                indicator = statusElement.querySelector('.status-indicator');
+                text = statusElement.querySelector('span');
+                
+                if (value >= 6.5 && value <= 8.5) {
+                    indicator.className = 'status-indicator good';
+                    text.textContent = 'อยู่ในเกณฑ์ปกติ (6.5-8.5)';
+                } else {
+                    indicator.className = 'status-indicator danger';
+                    text.textContent = 'อยู่นอกเกณฑ์ปกติ (6.5-8.5)';
+                }
+            } else if (type === 'tds') {
+                statusElement = document.querySelector('#dashboard > div:nth-child(2) .status');
+                indicator = statusElement.querySelector('.status-indicator');
+                text = statusElement.querySelector('span');
+                
+                if (value >= 100 && value <= 500) {
+                    indicator.className = 'status-indicator good';
+                    text.textContent = 'อยู่ในเกณฑ์ปกติ (100-500 ppm)';
+                } else if (value >= 80 && value <= 600) {
+                    indicator.className = 'status-indicator warning';
+                    text.textContent = 'ควรระวัง (100-500 ppm)';
+                } else {
+                    indicator.className = 'status-indicator danger';
+                    text.textContent = 'อยู่นอกเกณฑ์ปกติ (100-500 ppm)';
+                }
+            } else if (type === 'turbidity') {
+                statusElement = document.querySelector('#dashboard > div:nth-child(3) .status');
+                indicator = statusElement.querySelector('.status-indicator');
+                text = statusElement.querySelector('span');
+                
+                if (value >= 0 && value <= 10) {
+                    indicator.className = 'status-indicator good';
+                    text.textContent = 'อยู่ในเกณฑ์ปกติ (0-10 NTU)';
+                } else {
+                    indicator.className = 'status-indicator danger';
+                    text.textContent = 'อยู่นอกเกณฑ์ปกติ (0-10 NTU)';
+                }
+            }
+        }
+        
+        // อัพเดทการวิเคราะห์ AI
+        function updateAIAnalysis(data) {
+            const latestData = data[0];
+            const analysisContent = document.querySelector('.analysis-content');
+            const analysisHeader = document.querySelector('.analysis-container h2');
+            
+            // กำหนดคลาสตามสถานะ
+            if (latestData.turbidity > 10 || latestData.pH < 6.5 || latestData.pH > 8.5) {
+                analysisContent.className = 'analysis-content analysis-danger';
+            } else if (latestData.tds < 100 || latestData.tds > 500) {
+                analysisContent.className = 'analysis-content analysis-warning';
+            } else {
+                analysisContent.className = 'analysis-content analysis-good';
+            }
+            
+            // อัพเดทเนื้อหา
+            let statusText, problems, recommendations;
+            
+            if (latestData.turbidity > 10) {
+                statusText = "อันตราย";
+                problems = `<ul>
+                    <li>ค่าความขุ่น (${latestData.turbidity} NTU) สูงเกินเกณฑ์ (>10 NTU)</li>
+                    <li>ค่า pH (${latestData.pH}) ${latestData.pH < 6.5 || latestData.pH > 8.5 ? 'อยู่นอกเกณฑ์ปกติ' : 'อยู่ในเกณฑ์ปกติ'}</li>
+                    <li>ค่า TDS (${latestData.tds} ppm) ${latestData.tds < 100 || latestData.tds > 500 ? 'อยู่นอกเกณฑ์ปกติ' : 'อยู่ในเกณฑ์ปกติ'}</li>
+                </ul>`;
+                recommendations = `<ul>
+                    <li>ควรตรวจสอบระบบกรองน้ำและทำความสะอาดทันที</li>
+                    <li>พิจารณาใช้สารช่วยตกตะกอนเพื่อลดความขุ่น</li>
+                    <li>ตรวจสอบแหล่งที่มาของความขุ่น เช่น อาหารปลาหรือสิ่งปฏิกูล</li>
+                    <li>ติดตามค่า TDS อย่างใกล้ชิดเนื่องจากมีความผันผวน</li>
+                </ul>`;
+            } else if (latestData.pH < 6.5 || latestData.pH > 8.5) {
+                statusText = "อันตราย";
+                problems = `<ul>
+                    <li>ค่า pH (${latestData.pH}) อยู่นอกเกณฑ์ปกติ (6.5-8.5)</li>
+                    <li>ค่าความขุ่น (${latestData.turbidity} NTU) ${latestData.turbidity > 10 ? 'สูงเกินเกณฑ์' : 'อยู่ในเกณฑ์ปกติ'}</li>
+                    <li>ค่า TDS (${latestData.tds} ppm) ${latestData.tds < 100 || latestData.tds > 500 ? 'อยู่นอกเกณฑ์ปกติ' : 'อยู่ในเกณฑ์ปกติ'}</li>
+                </ul>`;
+                recommendations = `<ul>
+                    <li>ควรปรับค่า pH ให้อยู่ในเกณฑ์ที่เหมาะสม</li>
+                    <li>ตรวจสอบแหล่งที่มาของการเปลี่ยนแปลงค่า pH</li>
+                    <li>ติดตามค่าความขุ่นและค่า TDS อย่างใกล้ชิด</li>
+                </ul>`;
+            } else if (latestData.tds < 100 || latestData.tds > 500) {
+                statusText = "ต้องระวัง";
+                problems = `<ul>
+                    <li>ค่า TDS (${latestData.tds} ppm) ${latestData.tds < 100 ? 'ต่ำกว่า' : 'สูงกว่า'} เกณฑ์ปกติ (100-500 ppm)</li>
+                    <li>ค่า pH (${latestData.pH}) อยู่ในเกณฑ์ปกติ</li>
+                    <li>ค่าความขุ่น (${latestData.turbidity} NTU) อยู่ในเกณฑ์ปกติ</li>
+                </ul>`;
+                recommendations = `<ul>
+                    <li>ควรตรวจสอบค่า TDS อย่างใกล้ชิด เนื่องจากมีแนวโน้ม${latestData.tds < 100 ? 'ลดลง' : 'เพิ่มขึ้น'}</li>
+                    <li>ติดตามการเปลี่ยนแปลงของค่า pH อย่างสม่ำเสมอ</li>
+                    <li>ตรวจสอบระบบกรองน้ำเพื่อให้แน่ใจว่าทำงานได้อย่างมีประสิทธิภาพ</li>
+                </ul>`;
+            } else {
+                statusText = "ปกติ";
+                problems = `<ul>
+                    <li>ค่า pH (${latestData.pH}) อยู่ในเกณฑ์ปกติ</li>
+                    <li>ค่า TDS (${latestData.tds} ppm) อยู่ในเกณฑ์ปกติ</li>
+                    <li>ค่าความขุ่น (${latestData.turbidity} NTU) อยู่ในเกณฑ์ปกติ</li>
+                </ul>`;
+                recommendations = `<ul>
+                    <li>继续保持当前的水质管理措施</li>
+                    <li>定期监测水质参数</li>
+                    <li>记录数据以跟踪变化趋势</li>
+                </ul>`;
+            }
+            
+            analysisContent.innerHTML = `
+                <p><strong>สถานะน้ำ:</strong> ${statusText}</p>
+                <p><strong>อัปเดตล่าสุด:</strong> ${latestData.timestamp}</p>
+                <p><strong>ปัญหาที่พบ:</strong></p>
+                ${problems}
+            `;
+            
+            document.querySelector('.recommendation').innerHTML = `
+                <p><strong>คำแนะนำ:</strong></p>
+                ${recommendations}
+            `;
         }
         
         // ฟังก์ชันสำหรับอัพเดทตารางข้อมูล
@@ -769,9 +916,9 @@
                 
                 row.innerHTML = `
                     <td>${data.timestamp}</td>
-                    <td>${data.pH}</td>
-                    <td>${data.tds}</td>
-                    <td>${data.turbidity}</td>
+                    <td>${data.pH.toFixed(2)}</td>
+                    <td>${data.tds.toFixed(1)}</td>
+                    <td>${data.turbidity.toFixed(1)}</td>
                     <td><div class="status-indicator ${statusClass}"></div> ${status}</td>
                 `;
                 
@@ -934,9 +1081,9 @@
             const labels = document.createElement('div');
             labels.className = 'chart-labels';
             labels.innerHTML = `
-                <span>${new Date(sampleData[sampleData.length-10].timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})}</span>
+                <span>${values.length > 0 ? 'ก่อนหน้า' : ''}</span>
                 <span>${label}</span>
-                <span>${new Date(sampleData[0].timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})}</span>
+                <span>ล่าสุด</span>
             `;
             container.appendChild(labels);
         }
