@@ -1,11 +1,13 @@
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fish-Smile Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -308,6 +310,108 @@
             height: 250px;
             margin-top: 20px;
         }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #1e88e5;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .view-all-btn {
+            background-color: transparent;
+            color: #1e88e5;
+            border: 1px solid #1e88e5;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .view-all-btn:hover {
+            background-color: #1e88e5;
+            color: white;
+        }
+        
+        .parameter-chart {
+            margin-top: 20px;
+            height: 200px;
+        }
+        
+        /* Filter controls */
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-controls select, .filter-controls input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .download-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            margin-left: auto;
+        }
+        
+        .download-btn:hover {
+            background-color: #218838;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .pagination-btn {
+            padding: 8px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .pagination-btn.active {
+            background-color: #1e88e5;
+            color: white;
+            border-color: #1e88e5;
+        }
     </style>
 </head>
 <body>
@@ -317,7 +421,7 @@
         </a>
         
         <div class="header">
-            <h1><i class="fas fa-fish"></i> บ่ออนุบาลลูกปลา </h1>
+            <h1><i class="fas fa-fish"></i> บ่อปลาที่ 4 (บ่ออนุบาลลูกปลา) </h1>
             <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
@@ -326,30 +430,30 @@
         <div class="dashboard" id="dashboard">
             <div class="card">
                 <h2><i class="fas fa-tint"></i> ค่า pH</h2>
-                <div class="value" id="phValue">6.59 <span class="unit">pH</span></div>
+                <div class="value" id="phValue">7.37 <span class="unit">pH</span></div>
                 <div class="status">
                     <div class="status-indicator good"></div>
-                    <span>อยู่ในเกณฑ์ปกติ (6.5-8.5)</span>
+                    <span>ปกติ (อยู่ในเกณฑ์ 6.5-8.5)</span>
                 </div>
                 <div class="chart-container" id="phChart"></div>
             </div>
             
             <div class="card">
                 <h2><i class="fas fa-water"></i> ค่า TDS</h2>
-                <div class="value" id="tdsValue">87.4 <span class="unit">ppm</span></div>
+                <div class="value" id="tdsValue">167.9 <span class="unit">ppm</span></div>
                 <div class="status">
                     <div class="status-indicator warning"></div>
-                    <span>ต่ำกว่าเกณฑ์ปกติเล็กน้อย (100-500 ppm)</span>
+                    <span>ต่ำกว่าเกณฑ์ปกติ (100-500 ppm)</span>
                 </div>
                 <div class="chart-container" id="tdsChart"></div>
             </div>
             
             <div class="card">
                 <h2><i class="fas fa-cloud"></i> ความขุ่น</h2>
-                <div class="value" id="turbidityValue">19.15 <span class="unit">NTU</span></div>
+                <div class="value" id="turbidityValue">0 <span class="unit">NTU</span></div>
                 <div class="status">
-                    <div class="status-indicator warning"></div>
-                    <span>สูงกว่าเกณฑ์เล็กน้อย (0-10 NTU)</span>
+                    <div class="status-indicator good"></div>
+                    <span>ปกติ (อยู่ในเกณฑ์ 0-10 NTU)</span>
                 </div>
                 <div class="chart-container" id="turbidityChart"></div>
             </div>
@@ -359,16 +463,36 @@
         <div class="analysis-container" id="aiAnalysisContainer">
             <h2><i class="fas fa-brain"></i> การวิเคราะห์คุณภาพน้ำด้วย AI</h2>
             <div class="analysis-content analysis-warning">
-                <p><strong>สถานะน้ำ:</strong> ต้องเฝ้าระวัง</p>
+                <p><strong>สถานะน้ำ:</strong> เหมาะสมสำหรับการเลี้ยงบ่ออนุบาลลูกปลา</p>
                 <p><strong>ปัญหาที่พบ:</strong></p>
                 <ul>
                     <li>ความขุ่นสูงกว่าเกณฑ์เล็กน้อย (18.71-19.64 NTU จากเกณฑ์ 0-10 NTU)</li>
                     <li>ค่า TDS ต่ำกว่าเกณฑ์เล็กน้อย (73.8-89.1 ppm จากเกณฑ์ 100-500 ppm)</li>
-                    <li>ค่า pH อยู่ในเกณฑ์ปกติ (6.54-6.61)</li>
+					<li>ค่า pH อยู่ในเกณฑ์ปกติ (6.54-6.61)</li>
                 </ul>
                 
-                <div class="forecast-chart-container">
-                    <canvas id="forecastChart"></canvas>
+                <div class="tabs">
+                    <div class="tab active" data-tab="ph">ค่า pH</div>
+                    <div class="tab" data-tab="tds">ค่า TDS</div>
+                    <div class="tab" data-tab="turbidity">ความขุ่น</div>
+                </div>
+                
+                <div class="tab-content active" id="ph-tab">
+                    <div class="forecast-chart-container">
+                        <canvas id="phForecastChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="tds-tab">
+                    <div class="forecast-chart-container">
+                        <canvas id="tdsForecastChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="turbidity-tab">
+                    <div class="forecast-chart-container">
+                        <canvas id="turbidityForecastChart"></canvas>
+                    </div>
                 </div>
             </div>
             <div class="recommendation">
@@ -377,7 +501,7 @@
                     <li>ตรวจสอบแหล่งที่มาของความขุ่น อาจมีตะกอนหรือสารแขวนลอยในน้ำ</li>
                     <li>พิจารณาเพิ่มแร่ธาตุเล็กน้อยเพื่อปรับค่า TDS ให้อยู่ในเกณฑ์</li>
                     <li>สังเกตพฤติกรรมปลาว่ามีความผิดปกติหรือไม่</li>
-                    <li>ตรวจสอบระบบกรองน้ำว่าทำงานปกติหรือไม่</li>
+		            <li>ตรวจสอบระบบกรองน้ำว่าทำงานปกติหรือไม่</li>
                     <li>วัดค่าออกซิเจนละลายน้ำเพิ่มเติมเพื่อความมั่นใจ</li>
                 </ul>
             </div>
@@ -385,6 +509,26 @@
         
         <div class="data-table-container">
             <h2><i class="fas fa-history"></i> ข้อมูลย้อนหลัง</h2>
+            
+            <div class="filter-controls">
+                <select id="dateFilter">
+                    <option value="all">ทั้งหมด</option>
+                    <option value="2025-08-20">20 ส.ค. 2025</option>
+                    <option value="2025-08-21">21 ส.ค. 2025</option>
+                    <option value="2025-08-22">22 ส.ค. 2025</option>
+                    <option value="2025-08-23">23 ส.ค. 2025</option>
+                    <option value="2025-08-24">24 ส.ค. 2025</option>
+                </select>
+                
+                <select id="rowsPerPage">
+                    <option value="10">10 แถว</option>
+                    <option value="20">20 แถว</option>
+                    <option value="50">50 แถว</option>
+                    <option value="100">100 แถว</option>
+                </select>
+                
+            </div>
+            
             <table class="data-table">
                 <thead>
                     <tr>
@@ -396,78 +540,14 @@
                     </tr>
                 </thead>
                 <tbody id="dataTableBody">
-                    <tr>
-                        <td>8/8/2025, 18:55:31</td>
-                        <td>6.56</td>
-                        <td>73.8</td>
-                        <td>23.16</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:55:24</td>
-                        <td>6.54</td>
-                        <td>74.2</td>
-                        <td>17.89</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:55:18</td>
-                        <td>6.61</td>
-                        <td>74.2</td>
-                        <td>19.56</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:55:13</td>
-                        <td>6.6</td>
-                        <td>87.7</td>
-                        <td>19.15</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:55:07</td>
-                        <td>6.61</td>
-                        <td>87.7</td>
-                        <td>19.28</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:55:02</td>
-                        <td>6.6</td>
-                        <td>87.4</td>
-                        <td>19.39</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:54:56</td>
-                        <td>6.6</td>
-                        <td>89.1</td>
-                        <td>19.64</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:54:50</td>
-                        <td>6.6</td>
-                        <td>88.1</td>
-                        <td>19.64</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:54:44</td>
-                        <td>6.59</td>
-                        <td>86.6</td>
-                        <td>19.5</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
-                    <tr>
-                        <td>8/8/2025, 18:54:37</td>
-                        <td>6.59</td>
-                        <td>86.6</td>
-                        <td>18.9</td>
-                        <td><div class="status-indicator warning"></div> ความขุ่นสูง</td>
-                    </tr>
+                    <!-- ข้อมูลจะถูกเพิ่มโดย JavaScript -->
                 </tbody>
             </table>
+            
+            <div class="pagination" id="pagination">
+                <!-- ปุ่ม pagination จะถูกเพิ่มโดย JavaScript -->
+            </div>
+            
             <button class="refresh-btn" onclick="loadData()">
                 <i class="fas fa-sync-alt"></i> โหลดข้อมูลใหม่
             </button>
@@ -479,7 +559,7 @@
     </div>
 
     <script>
-        // ข้อมูลใหม่จากคุณ
+        // ข้อมูลใหม่จากคุณ - ปรับ timestamp ให้เป็นรูปแบบที่ถูกต้อง
         const sampleData = [
             { timestamp: '8/8/2025, 18:53:43', pH: 6.59, tds: 88.8, turbidity: 18.96 },
             { timestamp: '8/8/2025, 18:53:48', pH: 6.58, tds: 87.4, turbidity: 18.79 },
@@ -502,6 +582,13 @@
             { timestamp: '8/8/2025, 18:55:31', pH: 6.56, tds: 73.8, turbidity: 23.16 }
         ];
 
+
+        // ตัวแปรควบคุมการแสดงข้อมูล
+        let currentPage = 1;
+        let rowsPerPage = 10;
+        let filteredData = [];
+        let showingAllData = false;
+
         // ฟังก์ชันสำหรับโหลดข้อมูล
         function loadData() {
             // เรียงข้อมูลจากใหม่ไปเก่า
@@ -509,54 +596,92 @@
                 return new Date(b.timestamp) - new Date(a.timestamp);
             });
             
+            // กรองข้อมูลตามวันที่ที่เลือก
+            const dateFilter = document.getElementById('dateFilter').value;
+            if (dateFilter === 'all') {
+                filteredData = sortedData;
+            } else {
+                filteredData = sortedData.filter(item => {
+                    const itemDate = item.timestamp.split(' ')[0];
+                    return itemDate === dateFilter;
+                });
+            }
+            
             // อัพเดทค่าล่าสุดบนแดชบอร์ด
             document.getElementById('phValue').textContent = sortedData[0].pH.toFixed(2);
             document.getElementById('tdsValue').textContent = sortedData[0].tds.toFixed(1);
             document.getElementById('turbidityValue').textContent = sortedData[0].turbidity.toFixed(2);
             
             // อัพเดทสถานะ
-            updateStatusIndicators(sortedData[0]);
+            updateStatus('ph', sortedData[0].pH);
+            updateStatus('tds', sortedData[0].tds);
+            updateStatus('turbidity', sortedData[0].turbidity);
             
             // อัพเดทกราฟ
             createCharts(sortedData);
             
             // สร้างกราฟพยากรณ์
-            createForecastChart(sortedData);
+            createForecastCharts(sortedData);
             
             // อัพเดทตารางข้อมูล
-            updateDataTable(sortedData);
+            updateDataTable();
             
             // แสดงการแจ้งเตือน
             showNotification(1);
         }
 
-        // อัพเดทสถานะตัวชี้วัด
-        function updateStatusIndicators(data) {
-            // อัพเดทสถานะ pH
-            const phStatus = document.querySelector('#phValue').parentElement.querySelector('.status');
-            if (data.pH < 6.5 || data.pH > 8.5) {
-                phStatus.innerHTML = '<div class="status-indicator danger"></div><span>อันตราย! (เกินเกณฑ์ปกติ 6.5-8.5)</span>';
-            } else {
-                phStatus.innerHTML = '<div class="status-indicator good"></div><span>อยู่ในเกณฑ์ปกติ (6.5-8.5)</span>';
+        // อัพเดทสถานะ
+        function updateStatus(type, value) {
+            let statusElement, indicatorElement, message;
+            
+            if (type === 'ph') {
+                statusElement = document.querySelector('#dashboard .card:nth-child(1) .status');
+                indicatorElement = document.querySelector('#dashboard .card:nth-child(1) .status-indicator');
+                
+                if (value >= 6.5 && value <= 8.5) {
+                    message = 'ปกติ (อยู่ในเกณฑ์ 6.5-8.5)';
+                    indicatorElement.className = 'status-indicator good';
+                } else if ((value >= 6.0 && value < 6.5) || (value > 8.5 && value <= 9.0)) {
+                    message = 'เฝ้าระวัง (ใกล้ขอบเขตเกณฑ์)';
+                    indicatorElement.className = 'status-indicator warning';
+                } else {
+                    message = 'อันตราย! (เกินเกณฑ์ปกติ 6.5-8.5)';
+                    indicatorElement.className = 'status-indicator danger';
+                }
+            } else if (type === 'tds') {
+                statusElement = document.querySelector('#dashboard .card:nth-child(2) .status');
+                indicatorElement = document.querySelector('#dashboard .card:nth-child(2) .status-indicator');
+                
+                if (value >= 100 && value <= 500) {
+                    message = 'ปกติ (อยู่ในเกณฑ์ 100-500 ppm)';
+                    indicatorElement.className = 'status-indicator good';
+                } else if (value >= 50 && value < 100) {
+                    message = 'ต่ำกว่าเกณฑ์ปกติ (100-500 ppm)';
+                    indicatorElement.className = 'status-indicator warning';
+                } else if (value > 500 && value <= 800) {
+                    message = 'สูงกว่าเกณฑ์ปกติ (100-500 ppm)';
+                    indicatorElement.className = 'status-indicator warning';
+                } else {
+                    message = 'อันตราย! (เกินเกณฑ์ปกติอย่างรุนแรง)';
+                    indicatorElement.className = 'status-indicator danger';
+                }
+            } else if (type === 'turbidity') {
+                statusElement = document.querySelector('#dashboard .card:nth-child(3) .status');
+                indicatorElement = document.querySelector('#dashboard .card:nth-child(3) .status-indicator');
+                
+                if (value >= 0 && value <= 10) {
+                    message = 'ปกติ (อยู่ในเกณฑ์ 0-10 NTU)';
+                    indicatorElement.className = 'status-indicator good';
+                } else if (value > 10 && value <= 20) {
+                    message = 'เฝ้าระวัง (เกินเกณฑ์เล็กน้อย)';
+                    indicatorElement.className = 'status-indicator warning';
+                } else {
+                    message = 'อันตราย! (เกินเกณฑ์ปกติ 0-10 NTU)';
+                    indicatorElement.className = 'status-indicator danger';
+                }
             }
             
-            // อัพเดทสถานะ TDS
-            const tdsStatus = document.querySelector('#tdsValue').parentElement.querySelector('.status');
-            if (data.tds < 100) {
-                tdsStatus.innerHTML = '<div class="status-indicator warning"></div><span>ต่ำกว่าเกณฑ์ปกติเล็กน้อย (100-500 ppm)</span>';
-            } else if (data.tds > 500) {
-                tdsStatus.innerHTML = '<div class="status-indicator danger"></div><span>สูงกว่าเกณฑ์ปกติ (100-500 ppm)</span>';
-            } else {
-                tdsStatus.innerHTML = '<div class="status-indicator good"></div><span>อยู่ในเกณฑ์ปกติ (100-500 ppm)</span>';
-            }
-            
-            // อัพเดทสถานะความขุ่น
-            const turbidityStatus = document.querySelector('#turbidityValue').parentElement.querySelector('.status');
-            if (data.turbidity > 10) {
-                turbidityStatus.innerHTML = '<div class="status-indicator warning"></div><span>สูงกว่าเกณฑ์เล็กน้อย (0-10 NTU)</span>';
-            } else {
-                turbidityStatus.innerHTML = '<div class="status-indicator good"></div><span>อยู่ในเกณฑ์ปกติ (0-10 NTU)</span>';
-            }
+            statusElement.innerHTML = `<div class="status-indicator ${indicatorElement.className.replace('status-indicator ', '')}"></div><span>${message}</span>`;
         }
 
         // สร้างกราฟสำหรับค่า pH, TDS และความขุ่น
@@ -601,30 +726,47 @@
             const labels = document.createElement('div');
             labels.className = 'chart-labels';
             labels.innerHTML = `
-                <span>${new Date(sampleData[sampleData.length-10].timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})}</span>
+                <span>${formatTime(new Date(sampleData[sampleData.length-10].timestamp))}</span>
                 <span>${label}</span>
-                <span>${new Date(sampleData[0].timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})}</span>
+                <span>${formatTime(new Date(sampleData[0].timestamp))}</span>
             `;
             container.appendChild(labels);
         }
 
-        // สร้างกราฟพยากรณ์
-        function createForecastChart(data) {
-            const ctx = document.getElementById('forecastChart').getContext('2d');
-            
-            // ใช้ข้อมูลความขุ่น 10 ตัวล่าสุด
+        // สร้างกราฟพยากรณ์สำหรับทั้ง 3 พารามิเตอร์
+        function createForecastCharts(data) {
+            // ใช้ข้อมูล 10 ตัวล่าสุด
+            const phData = data.slice(0, 10).map(d => d.pH).reverse();
+            const tdsData = data.slice(0, 10).map(d => d.tds).reverse();
             const turbidityData = data.slice(0, 10).map(d => d.turbidity).reverse();
+            
             const timestamps = data.slice(0, 10).map(d => 
-                new Date(d.timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})
+                formatTime(new Date(d.timestamp))
             ).reverse();
             
             // สร้างข้อมูลพยากรณ์ (ตัวอย่าง)
-            const forecastData = [
+            const phForecastData = [
+                phData[phData.length-1],
+                phData[phData.length-1] + 0.1,
+                phData[phData.length-1] + 0.05,
+                phData[phData.length-1] - 0.1,
+                phData[phData.length-1] - 0.05
+            ];
+            
+            const tdsForecastData = [
+                tdsData[tdsData.length-1],
+                tdsData[tdsData.length-1] + 5,
+                tdsData[tdsData.length-1] + 10,
+                tdsData[tdsData.length-1] + 15,
+                tdsData[tdsData.length-1] + 20
+            ];
+            
+            const turbidityForecastData = [
                 turbidityData[turbidityData.length-1],
-                turbidityData[turbidityData.length-1] * 0.98,
-                turbidityData[turbidityData.length-1] * 0.96,
-                turbidityData[turbidityData.length-1] * 0.94,
-                turbidityData[turbidityData.length-1] * 0.92
+                turbidityData[turbidityData.length-1] + 0.5,
+                turbidityData[turbidityData.length-1] + 1.0,
+                turbidityData[turbidityData.length-1] + 1.5,
+                turbidityData[turbidityData.length-1] + 2.0
             ];
             
             const forecastTimestamps = [
@@ -635,14 +777,16 @@
                 '+2 ชั่วโมง'
             ];
             
-            new Chart(ctx, {
+            // สร้างกราฟ pH
+            const phCtx = document.getElementById('phForecastChart').getContext('2d');
+            new Chart(phCtx, {
                 type: 'line',
                 data: {
                     labels: [...timestamps, ...forecastTimestamps.slice(1)],
                     datasets: [
                         {
                             label: 'ข้อมูลจริง',
-                            data: [...turbidityData, ...Array(forecastData.length-1).fill(null)],
+                            data: [...phData, ...Array(phForecastData.length-1).fill(null)],
                             borderColor: '#1e88e5',
                             backgroundColor: 'rgba(30, 136, 229, 0.1)',
                             borderWidth: 2,
@@ -651,7 +795,7 @@
                         },
                         {
                             label: 'การพยากรณ์',
-                            data: [...Array(turbidityData.length).fill(null), ...forecastData],
+                            data: [...Array(phData.length).fill(null), ...phForecastData],
                             borderColor: '#e53935',
                             backgroundColor: 'rgba(229, 57, 53, 0.1)',
                             borderWidth: 2,
@@ -660,8 +804,170 @@
                             tension: 0.4
                         },
                         {
-                            label: 'เกณฑ์ปลอดภัย',
-                            data: Array(turbidityData.length + forecastData.length).fill(10),
+                            label: 'เกณฑ์ปลอดภัย (สูง)',
+                            data: Array(phData.length + phForecastData.length).fill(8.5),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [3, 3]
+                        },
+                        {
+                            label: 'เกณฑ์ปลอดภัย (ต่ำ)',
+                            data: Array(phData.length + phForecastData.length).fill(6.5),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [3, 3]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'แนวโน้มค่า pH และพยากรณ์ 2 ชั่วโมงข้างหน้า',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'ค่า pH'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // สร้างกราฟ TDS
+            const tdsCtx = document.getElementById('tdsForecastChart').getContext('2d');
+            new Chart(tdsCtx, {
+                type: 'line',
+                data: {
+                    labels: [...timestamps, ...forecastTimestamps.slice(1)],
+                    datasets: [
+                        {
+                            label: 'ข้อมูลจริง',
+                            data: [...tdsData, ...Array(tdsForecastData.length-1).fill(null)],
+                            borderColor: '#1e88e5',
+                            backgroundColor: 'rgba(30, 136, 229, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'การพยากรณ์',
+                            data: [...Array(tdsData.length).fill(null), ...tdsForecastData],
+                            borderColor: '#e53935',
+                            backgroundColor: 'rgba(229, 57, 53, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'เกณฑ์ปลอดภัย (สูง)',
+                            data: Array(tdsData.length + tdsForecastData.length).fill(500),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [3, 3]
+                        },
+                        {
+                            label: 'เกณฑ์ปลอดภัย (ต่ำ)',
+                            data: Array(tdsData.length + tdsForecastData.length).fill(100),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [3, 3]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'แนวโน้มค่า TDS และพยากรณ์ 2 ชั่วโมงข้างหน้า',
+                            font: {
+                                size: 14
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'ค่า TDS (ppm)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // สร้างกราฟความขุ่น
+            const turbidityCtx = document.getElementById('turbidityForecastChart').getContext('2d');
+            new Chart(turbidityCtx, {
+                type: 'line',
+                data: {
+                    labels: [...timestamps, ...forecastTimestamps.slice(1)],
+                    datasets: [
+                        {
+                            label: 'ข้อมูลจริง',
+                            data: [...turbidityData, ...Array(turbidityForecastData.length-1).fill(null)],
+                            borderColor: '#1e88e5',
+                            backgroundColor: 'rgba(30, 136, 229, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'การพยากรณ์',
+                            data: [...Array(turbidityData.length).fill(null), ...turbidityForecastData],
+                            borderColor: '#e53935',
+                            backgroundColor: 'rgba(229, 57, 53, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'เกณฑ์ปลอดภัย (สูง)',
+                            data: Array(turbidityData.length + turbidityForecastData.length).fill(10),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [3, 3]
+                        },
+                        {
+                            label: 'เกณฑ์ปลอดภัย (ต่ำ)',
+                            data: Array(turbidityData.length + turbidityForecastData.length).fill(0),
                             borderColor: '#2ecc71',
                             backgroundColor: 'transparent',
                             borderWidth: 1,
@@ -704,28 +1010,41 @@
         }
 
         // อัพเดทตารางข้อมูล
-        function updateDataTable(data) {
+        function updateDataTable() {
             const tableBody = document.getElementById('dataTableBody');
             tableBody.innerHTML = '';
             
-            // ใช้ข้อมูล 10 ตัวล่าสุด
-            const recentData = data.slice(0, 10);
+            // กำหนดจำนวนแถวต่อหน้า
+            rowsPerPage = parseInt(document.getElementById('rowsPerPage').value);
             
-            recentData.forEach(item => {
+            // คำนวณข้อมูลที่จะแสดงในหน้าปัจจุบัน
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const displayData = filteredData.slice(startIndex, endIndex);
+            
+            // สร้างแถวข้อมูล
+            displayData.forEach(item => {
                 const row = document.createElement('tr');
                 
-                // กำหนดสถานะตามค่า
+                // กำหนดสถานะ
                 let statusText, statusClass;
-                if (item.turbidity > 10) {
-                    statusText = 'ความขุ่นสูง';
+                if (item.pH < 6.5 || item.pH > 8.5 || item.turbidity > 10) {
+                    statusText = 'วิกฤต! ค่า pH หรือความขุ่นผิดปกติ';
+                    statusClass = 'danger';
+                } else if (item.tds < 100 || item.tds > 500) {
+                    statusText = 'เฝ้าระวัง! ค่า TDS ผิดปกติ';
                     statusClass = 'warning';
                 } else {
                     statusText = 'ปกติ';
                     statusClass = 'good';
                 }
                 
+                // จัดรูปแบบวันที่และเวลา
+                const dateTime = new Date(item.timestamp);
+                const formattedDateTime = `${dateTime.toLocaleDateString('th-TH')} ${formatTime(dateTime)}`;
+                
                 row.innerHTML = `
-                    <td>${item.timestamp}</td>
+                    <td>${formattedDateTime}</td>
                     <td>${item.pH.toFixed(2)}</td>
                     <td>${item.tds.toFixed(1)}</td>
                     <td>${item.turbidity.toFixed(2)}</td>
@@ -733,6 +1052,57 @@
                 `;
                 tableBody.appendChild(row);
             });
+            
+            // สร้าง pagination
+            createPagination();
+        }
+
+        // สร้าง pagination
+        function createPagination() {
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+            
+            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+            
+            if (totalPages <= 1) return;
+            
+            // ปุ่มย้อนกลับ
+            const prevButton = document.createElement('button');
+            prevButton.className = 'pagination-btn';
+            prevButton.innerHTML = '&laquo;';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateDataTable();
+                }
+            });
+            paginationContainer.appendChild(prevButton);
+            
+            // ปุ่มหมายเลขหน้า
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    updateDataTable();
+                });
+                paginationContainer.appendChild(pageButton);
+            }
+            
+            // ปุ่มถัดไป
+            const nextButton = document.createElement('button');
+            nextButton.className = 'pagination-btn';
+            nextButton.innerHTML = '&raquo;';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateDataTable();
+                }
+            });
+            paginationContainer.appendChild(nextButton);
         }
 
         // แสดงการแจ้งเตือน
@@ -748,11 +1118,180 @@
             const notification = document.createElement('div');
             notification.className = 'notification-container';
             notification.innerHTML = `
-                <i class="fas fa-bell" style="font-size: 1.5rem; color: #f39c12;"></i>
+                <i class="fas fa-bell" style="font-size: 1.5rem; color: #e74c3c;"></i>
                 <div class="notification-badge">${count}</div>
             `;
             header.appendChild(notification);
         }
+
+        // จัดรูปแบบเวลา
+        function formatTime(date) {
+            return date.toLocaleTimeString('th-TH', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+  
+        // สร้างรายงาน PDF
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // ข้อมูลล่าสุดจากแดชบอร์ด
+    const phValue = document.getElementById('phValue').textContent;
+    const tdsValue = document.getElementById('tdsValue').textContent;
+    const turbidityValue = document.getElementById('turbidityValue').textContent;
+    
+    // หัวเรื่องหลัก
+    doc.setFontSize(20);
+    doc.setTextColor(30, 136, 229); // สีน้ำเงิน
+    doc.setFont(undefined, 'bold');
+    doc.text('Fish-Smile', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // สีดำ
+    doc.setFont(undefined, 'normal');
+    doc.text('อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป', 105, 28, { align: 'center', maxWidth: 180 });
+    
+    doc.setFontSize(16);
+    doc.setTextColor(30, 136, 229);
+    doc.setFont(undefined, 'bold');
+    doc.text('บ่อปลาที่ 4 (บ่ออนุบาลลูกปลา)', 105, 40, { align: 'center' });
+    
+    // ข้อมูลค่าปัจจุบัน
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('ค่าปัจจุบัน:', 20, 55);
+    
+    doc.setFont(undefined, 'normal');
+    // ค่า pH
+    doc.text('ค่า pH : ' + phValue, 30, 65);
+    doc.setTextColor(46, 204, 113); // สีเขียวสำหรับสถานะปกติ
+    doc.text('ปกติ (อยู่ในเกณฑ์ 6.5-8.5)', 80, 65);
+    
+    doc.setTextColor(0, 0, 0);
+    // ค่า TDS
+    doc.text('ค่า TDS : ' + tdsValue, 30, 75);
+    doc.setTextColor(243, 156, 18); // สีส้มสำหรับสถานะเฝ้าระวัง
+    doc.text('ต่ำกว่าเกณฑ์ปกติ (100-500 ppm)', 80, 75);
+    
+    doc.setTextColor(0, 0, 0);
+    // ความขุ่น
+    doc.text('ความขุ่น : ' + turbidityValue, 30, 85);
+    doc.setTextColor(46, 204, 113); // สีเขียวสำหรับสถานะปกติ
+    doc.text('ปกติ (อยู่ในเกณฑ์ 0-10 NTU)', 80, 85);
+    
+    // การวิเคราะห์ด้วย AI
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('การวิเคราะห์คุณภาพน้ำด้วย AI', 20, 100);
+    
+    doc.setFont(undefined, 'normal');
+    doc.text('สถานะน้ำ: ต้องเฝ้าระวัง', 30, 110);
+    
+    doc.text('ปัญหาที่พบ:', 30, 120);
+    doc.text('- ค่า TDS ต่ำกว่าเกณฑ์มาตรฐาน (167.9 ppm จากเกณฑ์ 100-500 ppm)', 40, 128);
+    doc.text('- ค่า pH และความขุ่นอยู่ในเกณฑ์ปกติ', 40, 136);
+    
+    doc.text('คำแนะนำ:', 30, 150);
+    doc.text('- เพิ่มแร่ธาตุในน้ำเพื่อปรับค่า TDS ให้อยู่ในเกณฑ์ที่เหมาะสม', 40, 158);
+    doc.text('- ตรวจสอบระบบกรองน้ำและทำความสะอาดหากจำเป็น', 40, 166);
+    doc.text('- ติดตามค่า TDS อย่างใกล้ชิดเพื่อป้องกันการเปลี่ยนแปลงอย่างรวดเร็ว', 40, 174);
+    
+    // ข้อมูลย้อนหลัง
+    doc.setFont(undefined, 'bold');
+    doc.text('ข้อมูลย้อนหลัง', 20, 190);
+    
+    // เตรียมข้อมูลสำหรับตาราง
+    const tableColumn = ["วันที่", "เวลา", "ค่า pH", "ค่า TDS", "ความขุ่น", "สถานะ"];
+    const tableRows = [];
+    
+    // ใช้ข้อมูล 20 รายการล่าสุดสำหรับรายงาน
+    const reportData = [...filteredData].slice(0, 20);
+    
+    reportData.forEach(item => {
+        // กำหนดสถานะ
+        let statusText;
+        let statusColor;
+        if (item.pH < 6.5 || item.pH > 8.5 || item.turbidity > 10) {
+            statusText = 'วิกฤต';
+            statusColor = [231, 76, 60]; // สีแดง
+        } else if (item.tds < 100 || item.tds > 500) {
+            statusText = 'เฝ้าระวัง';
+            statusColor = [243, 156, 18]; // สีส้ม
+        } else {
+            statusText = 'ปกติ';
+            statusColor = [46, 204, 113]; // สีเขียว
+        }
+        
+        // แยกวันที่และเวลา
+        const dateTime = new Date(item.timestamp);
+        const dateStr = dateTime.toLocaleDateString('th-TH');
+        const timeStr = formatTime(dateTime);
+        
+        const dataRow = [
+            dateStr,
+            timeStr,
+            item.pH.toFixed(2),
+            item.tds.toFixed(1),
+            item.turbidity.toFixed(2),
+            statusText
+        ];
+        tableRows.push(dataRow);
+    });
+    
+    // สร้างตาราง
+    doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 195,
+        theme: 'grid',
+        styles: { 
+            fontSize: 8,
+            cellPadding: 2
+        },
+        headStyles: { 
+            fillColor: [30, 136, 229],
+            textColor: [255, 255, 255],
+            fontStyle: 'bold'
+        },
+        columnStyles: {
+            0: { cellWidth: 25 },
+            1: { cellWidth: 20 },
+            2: { cellWidth: 20 },
+            3: { cellWidth: 20 },
+            4: { cellWidth: 25 },
+            5: { cellWidth: 20 }
+        },
+        willDrawCell: function(data) {
+            // เปลี่ยนสีพื้นหลังของเซลล์สถานะ
+            if (data.column.index === 5) {
+                if (data.cell.raw === 'วิกฤต') {
+                    doc.setFillColor(231, 76, 60); // สีแดง
+                } else if (data.cell.raw === 'เฝ้าระวัง') {
+                    doc.setFillColor(243, 156, 18); // สีส้ม
+                } else {
+                    doc.setFillColor(46, 204, 113); // สีเขียว
+                }
+                doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+                doc.setTextColor(255, 255, 255); // ข้อความสีขาว
+            }
+        }
+    });
+    
+    // หมายเหตุท้ายหน้า
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('รายงานนี้ถูกสร้างขึ้นโดยอัตโนมัติจากระบบ Fish-Smile', 105, finalY, { align: 'center' });
+    doc.text(`วันที่ออกรายงาน: ${new Date().toLocaleDateString('th-TH')}`, 105, finalY + 5, { align: 'center' });
+    
+    // บันทึก PDF
+    doc.save(`fish_smile_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
 
         // โหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
         document.addEventListener('DOMContentLoaded', function() {
@@ -760,6 +1299,32 @@
             
             // อัพเดทข้อมูลทุก 5 นาที
             setInterval(loadData, 5 * 60 * 1000);
+            
+            // การจัดการแท็บ
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // ลบคลาส active จากแท็บทั้งหมด
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    // เพิ่มคลาส active ให้แท็บที่คลิก
+                    this.classList.add('active');
+                    
+                    // ซ่อนเนื้อหาแท็บทั้งหมด
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    // แสดงเนื้อหาแท็บที่เลือก
+                    document.getElementById(`${this.dataset.tab}-tab`).classList.add('active');
+                });
+            });
+            
+            // การจัดการตัวกรองข้อมูล
+            document.getElementById('dateFilter').addEventListener('change', function() {
+                currentPage = 1;
+                loadData();
+            });
+            
+            document.getElementById('rowsPerPage').addEventListener('change', function() {
+                currentPage = 1;
+                updateDataTable();
+            });
         });
     </script>
 </body>
