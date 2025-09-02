@@ -1,13 +1,67 @@
 # Fish-Smile Pond Monitoring System
 
-A real-time water quality monitoring dashboard for aquaculture ponds with API integration and intelligent analysis.
+Fish-Smile provides real-time water quality monitoring for multiple ponds. It includes a static frontend with dashboards and a Flask API that simulates sensor data, analysis, and simple forecasting.
 
-## Architecture
+## How It Fits Together
+- Frontend (web):
+  - `index.html` is the homepage linking to `Fish-Smile01–04.html` dashboards.
+  - Frontend JS (in `js/`) renders charts, status chips, and calls the API.
+  - In Docker, Nginx serves the frontend and proxies `/api` to the backend for same-origin requests.
+- Backend (api):
+  - Flask app (`api/app.py`) exposes REST endpoints for current readings, history, analysis, and forecast.
+  - Defaults to `PORT=5050` and supports env overrides.
 
-### Frontend
-- **HTML Dashboards**: Individual pond monitoring interfaces
-- **Modular JavaScript**: Separated utilities, dashboard logic, and pond-specific configurations
-- **Skeleton Loading**: Smooth loading states during data fetching
+## Project Structure
+- `index.html`: Clean homepage with live pond summaries
+- `Fish-Smile0[1-4].html`: Dashboards for each pond
+- `js/`: Frontend modules (`common.js`, `dashboard.js`, `pond[1-4].js`)
+- `api/`: Flask backend (`app.py`, `requirements.txt`, `Dockerfile`)
+- `deploy/`: Nginx config and frontend Dockerfile
+- `start-dev.sh`: One-command local dev
+- `AGENTS.md`: Contributor guidelines
+
+## Run Locally
+- One command (API 5050, Web 8000):
+  - `./start-dev.sh`
+- Manual:
+  - API: `cd api && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && PORT=5050 python app.py`
+  - Web: `python3 -m http.server 8000`
+- Open: `http://localhost:8000/`
+
+Notes (local): The homepage tries `/api/ponds` first and falls back to `http://localhost:5050/api/ponds`, so it works with or without a reverse proxy. Dashboards use `http://localhost:5050/api` by default (see `js/common.js`).
+
+## Docker (Recommended)
+- Build and run:
+  - `docker compose up --build`
+- Open:
+  - Web: `http://localhost:8000/`
+  - API (direct): `http://localhost:5050/api/ponds`
+
+Services:
+- `web`: Nginx serves static files and proxies `/api` to `api:5050`.
+- `api`: Gunicorn serves Flask on port 5050 (`ENV PORT=5050`).
+
+## API Overview
+- Base URL: `http://localhost:5050/api` (or `/api` when proxied by Nginx)
+- Endpoints:
+  - `GET /sensors/{pond_id}/current`
+  - `GET /sensors/{pond_id}/history?limit=N&hours=H`
+  - `POST /analysis/{pond_id}` with JSON `{ pH, tds, turbidity }`
+  - `GET /forecast/{pond_id}?parameter=turbidity|pH|tds&hours=H`
+  - `GET /ponds`
+- Example: `curl http://localhost:5050/api/sensors/pond1/current`
+
+## Configuration
+- API env vars: `PORT` (default 5050), `DEBUG` (`true|false`), `GUNICORN_WORKERS` (in Docker)
+- Frontend API base: `js/common.js -> APIUtils.baseURL` (defaults to `http://localhost:5050/api`). For same-origin behind Nginx, switch it to `/api` and rebuild the `web` image.
+
+## Troubleshooting
+- Port busy: change published port in `docker-compose.yml` (e.g., `5051:5050`).
+- Docker daemon: start Docker Desktop; verify with `docker info`.
+- Health: `curl http://localhost:5050/` should return status JSON.
+
+## Contributing
+See `AGENTS.md` for style, testing, and PR guidelines.
 - **Chart Visualization**: Real-time parameter charts and forecasting
 
 ### Backend
@@ -41,7 +95,7 @@ Fish-smile/
 
 ## API Endpoints
 
-### Base URL: `http://localhost:5000/api`
+### Base URL: `http://localhost:5050/api`
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -99,6 +153,14 @@ cd api && source venv/bin/activate && python app.py
 python3 -m http.server 8000
 ```
 
+### Docker Deployment
+For a containerized setup using Nginx + Gunicorn, see DEPLOYMENT.md. Quick run:
+```bash
+docker compose up --build
+# Web: http://localhost:8000/Fish-Smile01.html
+# API: http://localhost:5050/api/ponds
+```
+
 ### Environment Setup
 ```bash
 # API dependencies
@@ -148,7 +210,7 @@ CONFIG = {
 ### API Settings
 ```javascript
 APIUtils = {
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://localhost:5050/api',
     retryAttempts: 3,
     timeout: 10000
 }

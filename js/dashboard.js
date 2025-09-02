@@ -176,20 +176,22 @@ class FishSmileDashboard {
             
             tableContainer.innerHTML = `
                 ${titleHTML}
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>วันที่/เวลา</th>
-                            <th>ค่า pH</th>
-                            <th>ค่า TDS</th>
-                            <th>ความขุ่น</th>
-                            <th>สถานะ</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dataTableBody">
-                        <!-- Data will be populated here -->
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>วันที่/เวลา</th>
+                                <th>ค่า pH</th>
+                                <th>ค่า TDS</th>
+                                <th>ความขุ่น</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
                 <button class="refresh-btn" onclick="refreshDashboard()">
                     <i class="fas fa-sync-alt"></i> โหลดข้อมูลใหม่
                 </button>
@@ -303,9 +305,8 @@ class FishSmileDashboard {
         if (!tableBody) return;
         
         tableBody.innerHTML = '';
-        const recentData = data.slice(0, CONFIG.maxDataPoints);
-        
-        recentData.forEach(item => {
+        // Show full history; the table container is scrollable in HTML/CSS
+        data.forEach(item => {
             const row = this.createTableRow(item);
             tableBody.appendChild(row);
         });

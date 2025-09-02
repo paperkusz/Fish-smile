@@ -17,8 +17,9 @@ CORS(app)  # Enable CORS for frontend integration
 
 # Configuration
 API_VERSION = "v1"
-PORT = 5050
-DEBUG = True
+# Read runtime config from environment (container- and dev-friendly)
+PORT = int(os.getenv("PORT", "5050"))
+DEBUG = os.getenv("DEBUG", "true").lower() in ("1", "true", "yes")
 
 # Sample data generators for different pond types
 POND_CONFIGS = {
@@ -352,8 +353,8 @@ def internal_error(error):
 
 if __name__ == '__main__':
     print(f"🐟 Fish-Smile API Server starting...")
-    print(f"📡 Server will be available at: http://localhost:{PORT}")
-    print(f"📚 API Documentation: http://localhost:{PORT}")
+    print(f"📡 Server will be available at: http://0.0.0.0:{PORT}")
+    print(f"📚 API Documentation: http://0.0.0.0:{PORT}")
     print(f"🔧 Debug mode: {DEBUG}")
     print(f"🌐 CORS enabled for frontend integration")
     print("=" * 50)

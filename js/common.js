@@ -502,7 +502,7 @@ const SkeletonUtils = {
 
 // API integration utilities
 const APIUtils = {
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'http://localhost:5050/api',
     retryAttempts: 3,
     retryDelay: 1000, // 1 second
     

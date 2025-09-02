@@ -24,10 +24,11 @@ else
     echo "✅ Python virtual environment found"
 fi
 
-# Start API server in background
+# Start API server in background (use port 5050 to avoid collisions)
 echo "🚀 Starting API server..."
 cd api
 source venv/bin/activate
+export PORT=5050
 python app.py &
 API_PID=$!
 cd ..
@@ -37,8 +38,8 @@ echo "⏳ Waiting for API server to start..."
 sleep 3
 
 # Check if API is running
-if curl -s http://localhost:5000/ > /dev/null; then
-    echo "✅ API server is running at http://localhost:5000"
+if curl -s http://localhost:5050/ > /dev/null; then
+    echo "✅ API server is running at http://localhost:5050"
 else
     echo "❌ API server failed to start"
     kill $API_PID 2>/dev/null
@@ -56,8 +57,8 @@ sleep 2
 echo "✅ Frontend server is running at http://localhost:8000"
 echo ""
 echo "🎯 Open your browser and go to:"
-echo "   Frontend: http://localhost:8000"
-echo "   API Docs: http://localhost:5000"
+echo "   Homepage: http://localhost:8000/"
+echo "   API Docs: http://localhost:5050"
 echo ""
 echo "📊 Available dashboards:"
 echo "   • Pond 1: http://localhost:8000/Fish-Smile01.html"

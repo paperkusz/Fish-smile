@@ -1,0 +1,27 @@
+services:
+  api:
+    build:
+      context: ./api
+    image: fishsmile-api
+    environment:
+      - PORT=5050
+      - DEBUG=false
+      - GUNICORN_WORKERS=2
+    ports:
+      - "5050:5050"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:5050/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/frontend.Dockerfile
+    image: fishsmile-web
+    ports:
+      - "8000:80"
+    depends_on:
+      api:
+        condition: service_healthy

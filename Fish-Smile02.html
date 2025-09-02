@@ -20,11 +20,7 @@
             line-height: 1.6;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
         
         .header {
             text-align: center;
@@ -42,20 +38,9 @@
             font-size: 2rem;
         }
         
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin: 20px 0 30px; }
         
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
+        .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
         
         .card:hover {
             transform: translateY(-5px);
@@ -82,11 +67,7 @@
             color: #7f8c8d;
         }
         
-        .chart-container {
-            height: 200px;
-            margin-top: 15px;
-            position: relative;
-        }
+        .chart-container { height: 200px; margin-top: 12px; position: relative; }
         
         .status {
             display: flex;
@@ -116,26 +97,12 @@
             background-color: #e74c3c;
         }
         
-        .data-table-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
+        .data-table-container { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 30px; }
         
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+        .table-scroll { max-height: 360px; overflow-y: auto; border: 1px solid #ecf0f1; border-radius: 8px; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 0; }
         
-        .data-table th {
-            background-color: #1e88e5;
-            color: white;
-            padding: 12px 15px;
-            text-align: left;
-        }
+        .data-table thead th { background-color: #1e88e5; color: white; padding: 12px 15px; text-align: left; position: sticky; top: 0; z-index: 1; }
         
         .data-table td {
             padding: 12px 15px;
@@ -304,10 +271,27 @@
             background-color: #1565c0;
         }
         
-        .forecast-chart-container {
-            height: 250px;
-            margin-top: 20px;
-        }
+        .forecast-chart-container { height: 250px; margin-top: 20px; }
+
+        /* Graph metric selector */
+        .controls { display: flex; align-items: center; gap: 12px; margin: 12px 0 8px; flex-wrap: wrap; }
+        .controls .label { color: #555; font-weight: 600; }
+        .seg { display: inline-flex; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+        .seg button { appearance: none; border: 0; background: #fff; padding: 8px 12px; cursor: pointer; font-weight: 600; color: #334155; }
+        .seg button + button { border-left: 1px solid #e2e8f0; }
+        .seg button.active { background: #eef2ff; color: #1e3a8a; }
+
+        body[data-graph="ph"] .dashboard .card:nth-child(1) .chart-container { display: block; }
+        body[data-graph="ph"] .dashboard .card:nth-child(2) .chart-container,
+        body[data-graph="ph"] .dashboard .card:nth-child(3) .chart-container { display: none; }
+
+        body[data-graph="tds"] .dashboard .card:nth-child(2) .chart-container { display: block; }
+        body[data-graph="tds"] .dashboard .card:nth-child(1) .chart-container,
+        body[data-graph="tds"] .dashboard .card:nth-child(3) .chart-container { display: none; }
+
+        body[data-graph="turbidity"] .dashboard .card:nth-child(3) .chart-container { display: block; }
+        body[data-graph="turbidity"] .dashboard .card:nth-child(1) .chart-container,
+        body[data-graph="turbidity"] .dashboard .card:nth-child(2) .chart-container { display: none; }
     </style>
 </head>
 <body>
@@ -321,6 +305,16 @@
             <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
+        <div class="controls">
+            <span class="label"><i class="fas fa-chart-line"></i> แสดงกราฟ:</span>
+            <div class="seg" role="tablist" aria-label="เลือกกราฟ">
+                <button type="button" class="active" data-graph="all" role="tab" aria-selected="true">ทั้งหมด</button>
+                <button type="button" data-graph="ph" role="tab">pH</button>
+                <button type="button" data-graph="tds" role="tab">TDS</button>
+                <button type="button" data-graph="turbidity" role="tab">ความขุ่น</button>
+            </div>
+        </div>
+
         <div class="loader" id="loader"></div>
         
         <div class="dashboard" id="dashboard">
@@ -482,5 +476,18 @@
     <script src="js/common.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/pond2.js"></script>
+    <script>
+      (function(){
+        document.body.dataset.graph = 'all';
+        const seg = document.querySelector('.seg');
+        if (!seg) return;
+        seg.addEventListener('click', (e)=>{
+          const btn = e.target.closest('button[data-graph]');
+          if (!btn) return;
+          document.body.dataset.graph = btn.dataset.graph;
+          [...seg.querySelectorAll('button')].forEach(b=>b.classList.toggle('active', b===btn));
+        });
+      })();
+    </script>
 </body>
 </html>
