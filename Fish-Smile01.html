@@ -1275,9 +1275,8 @@
             });
         }
 
+  
         // สร้างรายงาน PDF
-        <script>
-// สร้างรายงาน PDF
 function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -1435,7 +1434,7 @@ function generatePDF() {
     // บันทึก PDF
     doc.save(`fish_smile_report_${new Date().toISOString().slice(0, 10)}.pdf`);
 }
-</script>
+
 
         // โหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
         document.addEventListener('DOMContentLoaded', function() {
