@@ -1276,73 +1276,166 @@
         }
 
         // สร้างรายงาน PDF
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // หัวเรื่อง
-            doc.setFontSize(20);
-            doc.text('รายงานคุณภาพน้ำบ่อปลาที่ 2 (ปลานิล)', 105, 15, { align: 'center' });
-            
-            doc.setFontSize(12);
-            doc.text(`วันที่ออกรายงาน: ${new Date().toLocaleDateString('th-TH')}`, 105, 25, { align: 'center' });
-            
-            // ข้อมูลสรุป
-            doc.setFontSize(14);
-            doc.text('ข้อมูลสรุป', 20, 40);
-            
-            doc.setFontSize(12);
-            doc.text(`ค่า pH ล่าสุด: ${document.getElementById('phValue').textContent}`, 20, 50);
-            doc.text(`ค่า TDS ล่าสุด: ${document.getElementById('tdsValue').textContent}`, 20, 60);
-            doc.text(`ความขุ่นล่าสุด: ${document.getElementById('turbidityValue').textContent}`, 20, 70);
-            
-            // ตารางข้อมูล
-            doc.setFontSize(14);
-            doc.text('ข้อมูลย้อนหลัง', 20, 85);
-            
-            const tableColumn = ["วันที่/เวลา", "ค่า pH", "ค่า TDS", "ความขุ่น", "สถานะ"];
-            const tableRows = [];
-            
-            // ใช้ข้อมูล 20 รายการล่าสุดสำหรับรายงาน
-            const reportData = [...filteredData].slice(0, 20);
-            
-            reportData.forEach(item => {
-                // กำหนดสถานะ
-                let statusText;
-                if (item.pH < 6.5 || item.pH > 8.5 || item.turbidity > 10) {
-                    statusText = 'วิกฤต';
-                } else if (item.tds < 100 || item.tds > 500) {
-                    statusText = 'เฝ้าระวัง';
-                } else {
-                    statusText = 'ปกติ';
-                }
-                
-                // จัดรูปแบบวันที่และเวลา
-                const dateTime = new Date(item.timestamp);
-                const formattedDateTime = `${dateTime.toLocaleDateString('th-TH')} ${formatTime(dateTime)}`;
-                
-                const dataRow = [
-                    formattedDateTime,
-                    item.pH.toFixed(2),
-                    item.tds.toFixed(1),
-                    item.turbidity.toFixed(2),
-                    statusText
-                ];
-                tableRows.push(dataRow);
-            });
-            
-            doc.autoTable({
-                head: [tableColumn],
-                body: tableRows,
-                startY: 90,
-                theme: 'grid',
-                styles: { fontSize: 10 },
-                headStyles: { fillColor: [30, 136, 229] }
-            });
-            
-            // บันทึก PDF
-            doc.save(`water_quality_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+        <script>
+// สร้างรายงาน PDF
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // ข้อมูลล่าสุดจากแดชบอร์ด
+    const phValue = document.getElementById('phValue').textContent;
+    const tdsValue = document.getElementById('tdsValue').textContent;
+    const turbidityValue = document.getElementById('turbidityValue').textContent;
+    
+    // หัวเรื่องหลัก
+    doc.setFontSize(20);
+    doc.setTextColor(30, 136, 229); // สีน้ำเงิน
+    doc.setFont(undefined, 'bold');
+    doc.text('Fish-Smile', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0); // สีดำ
+    doc.setFont(undefined, 'normal');
+    doc.text('อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป', 105, 28, { align: 'center', maxWidth: 180 });
+    
+    doc.setFontSize(16);
+    doc.setTextColor(30, 136, 229);
+    doc.setFont(undefined, 'bold');
+    doc.text('บ่อปลาที่ 2 (ปลานิล)', 105, 40, { align: 'center' });
+    
+    // ข้อมูลค่าปัจจุบัน
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('ค่าปัจจุบัน:', 20, 55);
+    
+    doc.setFont(undefined, 'normal');
+    // ค่า pH
+    doc.text('ค่า pH : ' + phValue, 30, 65);
+    doc.setTextColor(46, 204, 113); // สีเขียวสำหรับสถานะปกติ
+    doc.text('ปกติ (อยู่ในเกณฑ์ 6.5-8.5)', 80, 65);
+    
+    doc.setTextColor(0, 0, 0);
+    // ค่า TDS
+    doc.text('ค่า TDS : ' + tdsValue, 30, 75);
+    doc.setTextColor(243, 156, 18); // สีส้มสำหรับสถานะเฝ้าระวัง
+    doc.text('ต่ำกว่าเกณฑ์ปกติ (100-500 ppm)', 80, 75);
+    
+    doc.setTextColor(0, 0, 0);
+    // ความขุ่น
+    doc.text('ความขุ่น : ' + turbidityValue, 30, 85);
+    doc.setTextColor(46, 204, 113); // สีเขียวสำหรับสถานะปกติ
+    doc.text('ปกติ (อยู่ในเกณฑ์ 0-10 NTU)', 80, 85);
+    
+    // การวิเคราะห์ด้วย AI
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('การวิเคราะห์คุณภาพน้ำด้วย AI', 20, 100);
+    
+    doc.setFont(undefined, 'normal');
+    doc.text('สถานะน้ำ: ต้องเฝ้าระวัง', 30, 110);
+    
+    doc.text('ปัญหาที่พบ:', 30, 120);
+    doc.text('- ค่า TDS ต่ำกว่าเกณฑ์มาตรฐาน (167.9 ppm จากเกณฑ์ 100-500 ppm)', 40, 128);
+    doc.text('- ค่า pH และความขุ่นอยู่ในเกณฑ์ปกติ', 40, 136);
+    
+    doc.text('คำแนะนำ:', 30, 150);
+    doc.text('- เพิ่มแร่ธาตุในน้ำเพื่อปรับค่า TDS ให้อยู่ในเกณฑ์ที่เหมาะสม', 40, 158);
+    doc.text('- ตรวจสอบระบบกรองน้ำและทำความสะอาดหากจำเป็น', 40, 166);
+    doc.text('- ติดตามค่า TDS อย่างใกล้ชิดเพื่อป้องกันการเปลี่ยนแปลงอย่างรวดเร็ว', 40, 174);
+    
+    // ข้อมูลย้อนหลัง
+    doc.setFont(undefined, 'bold');
+    doc.text('ข้อมูลย้อนหลัง', 20, 190);
+    
+    // เตรียมข้อมูลสำหรับตาราง
+    const tableColumn = ["วันที่", "เวลา", "ค่า pH", "ค่า TDS", "ความขุ่น", "สถานะ"];
+    const tableRows = [];
+    
+    // ใช้ข้อมูล 20 รายการล่าสุดสำหรับรายงาน
+    const reportData = [...filteredData].slice(0, 20);
+    
+    reportData.forEach(item => {
+        // กำหนดสถานะ
+        let statusText;
+        let statusColor;
+        if (item.pH < 6.5 || item.pH > 8.5 || item.turbidity > 10) {
+            statusText = 'วิกฤต';
+            statusColor = [231, 76, 60]; // สีแดง
+        } else if (item.tds < 100 || item.tds > 500) {
+            statusText = 'เฝ้าระวัง';
+            statusColor = [243, 156, 18]; // สีส้ม
+        } else {
+            statusText = 'ปกติ';
+            statusColor = [46, 204, 113]; // สีเขียว
         }
+        
+        // แยกวันที่และเวลา
+        const dateTime = new Date(item.timestamp);
+        const dateStr = dateTime.toLocaleDateString('th-TH');
+        const timeStr = formatTime(dateTime);
+        
+        const dataRow = [
+            dateStr,
+            timeStr,
+            item.pH.toFixed(2),
+            item.tds.toFixed(1),
+            item.turbidity.toFixed(2),
+            statusText
+        ];
+        tableRows.push(dataRow);
+    });
+    
+    // สร้างตาราง
+    doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 195,
+        theme: 'grid',
+        styles: { 
+            fontSize: 8,
+            cellPadding: 2
+        },
+        headStyles: { 
+            fillColor: [30, 136, 229],
+            textColor: [255, 255, 255],
+            fontStyle: 'bold'
+        },
+        columnStyles: {
+            0: { cellWidth: 25 },
+            1: { cellWidth: 20 },
+            2: { cellWidth: 20 },
+            3: { cellWidth: 20 },
+            4: { cellWidth: 25 },
+            5: { cellWidth: 20 }
+        },
+        willDrawCell: function(data) {
+            // เปลี่ยนสีพื้นหลังของเซลล์สถานะ
+            if (data.column.index === 5) {
+                if (data.cell.raw === 'วิกฤต') {
+                    doc.setFillColor(231, 76, 60); // สีแดง
+                } else if (data.cell.raw === 'เฝ้าระวัง') {
+                    doc.setFillColor(243, 156, 18); // สีส้ม
+                } else {
+                    doc.setFillColor(46, 204, 113); // สีเขียว
+                }
+                doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+                doc.setTextColor(255, 255, 255); // ข้อความสีขาว
+            }
+        }
+    });
+    
+    // หมายเหตุท้ายหน้า
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('รายงานนี้ถูกสร้างขึ้นโดยอัตโนมัติจากระบบ Fish-Smile', 105, finalY, { align: 'center' });
+    doc.text(`วันที่ออกรายงาน: ${new Date().toLocaleDateString('th-TH')}`, 105, finalY + 5, { align: 'center' });
+    
+    // บันทึก PDF
+    doc.save(`fish_smile_report_${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+</script>
 
         // โหลดข้อมูลเมื่อหน้าเว็บโหลดเสร็จ
         document.addEventListener('DOMContentLoaded', function() {
