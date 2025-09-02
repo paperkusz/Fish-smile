@@ -1086,8 +1086,16 @@
                             tension: 0.4
                         },
                         {
-                            label: 'เกณฑ์ปลอดภัย',
-                            data: Array(turbidityData.length + turbidityForecastData.length).fill(10),
+                            label: 'เกณฑ์ปลอดภัย (สูง)',
+                            data: Array(turbidityData.length + turbidityForecastData.length).fill(500),
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            borderDash: [3, 3]
+                        },
+                        {
+                            label: 'เกณฑ์ปลอดภัย (ต่ำ)',
+                            data: Array(turbidityData.length + turbidityForecastData.length).fill(100),
                             borderColor: '#2ecc71',
                             backgroundColor: 'transparent',
                             borderWidth: 1,
