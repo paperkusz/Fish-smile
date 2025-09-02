@@ -1275,7 +1275,27 @@
             });
         }
 
-      
+        // สร้างรายงาน PDF
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // หัวเรื่อง
+            doc.setFontSize(20);
+            doc.text('รายงานคุณภาพน้ำบ่อปลาที่ 2 (ปลานิล)', 105, 15, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.text(`วันที่ออกรายงาน: ${new Date().toLocaleDateString('th-TH')}`, 105, 25, { align: 'center' });
+            
+            // ข้อมูลสรุป
+            doc.setFontSize(14);
+            doc.text('ข้อมูลสรุป', 20, 40);
+            
+            doc.setFontSize(12);
+            doc.text(`ค่า pH ล่าสุด: ${document.getElementById('phValue').textContent}`, 20, 50);
+            doc.text(`ค่า TDS ล่าสุด: ${document.getElementById('tdsValue').textContent}`, 20, 60);
+            doc.text(`ความขุ่นล่าสุด: ${document.getElementById('turbidityValue').textContent}`, 20, 70);
+            
             // ตารางข้อมูล
             doc.setFontSize(14);
             doc.text('ข้อมูลย้อนหลัง', 20, 85);
