@@ -421,7 +421,7 @@
         </a>
         
         <div class="header">
-            <h1><i class="fas fa-fish"></i> บ่อปลาที่ 3 (ปลาดุก) </h1>
+            <h1><i class="fas fa-fish"></i> บ่อปลาที่ 2 (ปลานิล) </h1>
             <p>อุปกรณ์อัจฉริยะตรวจคุณภาพน้ำสำหรับการเลี้ยงปลาในบ่อปิดและแจ้งเตือนเมื่อคุณภาพน้ำเปลี่ยนไป</p>
         </div>
         
@@ -463,12 +463,11 @@
         <div class="analysis-container" id="aiAnalysisContainer">
             <h2><i class="fas fa-brain"></i> การวิเคราะห์คุณภาพน้ำด้วย AI</h2>
             <div class="analysis-content analysis-warning">
-                <p><strong>สถานะน้ำ:</strong> เหมาะสมสำหรับการเลี้ยงปลาดุก</p>
+                <p><strong>สถานะน้ำ:</strong> ต้องเฝ้าระวัง</p>
                 <p><strong>ปัญหาที่พบ:</strong></p>
                 <ul>
-                    <li>ค่า pH อยู่ในช่วงเหมาะสม (7.2-7.8) สำหรับปลาดุก</li>
-                    <li>ความขุ่นอยู่ในเกณฑ์ดี (ต่ำกว่า 5 NTU)</li>
-					<li>ค่า TDS อยู่ในช่วงแนะนำสำหรับการเลี้ยงปลา (250-350 ppm)</li>
+                    <li>ค่า TDS ต่ำกว่าเกณฑ์มาตรฐาน (167.9 ppm จากเกณฑ์ 100-500 ppm)</li>
+                    <li>ค่า pH และความขุ่นอยู่ในเกณฑ์ปกติ</li>
                 </ul>
                 
                 <div class="tabs">
@@ -498,10 +497,11 @@
             <div class="recommendation">
                 <p><strong>คำแนะนำ:</strong></p>
                 <ul>
-                    <li>ตรวจสอบค่าพารามิเตอร์น้ำวันละ 2 ครั้ง</li>
-                    <li>เปลี่ยนน้ำ 10-15% ทุกสัปดาห์</li>
-                    <li>ทำความสะอาดตะแกรงกรองทุก 3 วัน</li>
-		        <li>สังเกตพฤติกรรมปลาอย่างสม่ำเสมอ</li>
+                    <li>หยุดให้อาหารปลาทันที และตรวจสอบแหล่งกำเนิดมลพิษ</li>
+                    <li>เปลี่ยนน้ำบางส่วนทันที (อย่างน้อย 50%)</li>
+                    <li>เพิ่มระบบเติมออกซิเจนเร่งด่วน</li>
+		        <li>ตรวจสอบเครื่องวัดค่าอุปกรณ์ว่าทำงานปกติหรือไม่</li>
+		        <li>แยกปลาออกหากแสดงอาการผิดปกติ</li>
                 </ul>
             </div>
         </div>
@@ -560,26 +560,26 @@
     <script>
         // ข้อมูลใหม่จากคุณ - ปรับ timestamp ให้เป็นรูปแบบที่ถูกต้อง
         const sampleData = [
-            { timestamp: '7/8/2025, 20:43:35', pH: 19.45, tds: 85.6, turbidity: 2793.05 },
-            { timestamp: '7/8/2025, 20:43:43', pH: 19.21, tds: 106.3, turbidity: 2690.55 },
-            { timestamp: '7/8/2025, 20:43:52', pH: 20.32, tds: 12.5, turbidity: 2819.16 },
-            { timestamp: '7/8/2025, 20:44:06', pH: 20.1, tds: 25, turbidity: 2882.02 },
-            { timestamp: '7/8/2025, 20:44:12', pH: 20.4, tds: 10.3, turbidity: 2825.93 },
-            { timestamp: '7/8/2025, 20:44:20', pH: 20.34, tds: 12.5, turbidity: 2813.36 },
-            { timestamp: '7/8/2025, 20:44:29', pH: 19.95, tds: 46, turbidity: 2749.54 },
-            { timestamp: '7/8/2025, 20:44:37', pH: 20.32, tds: 11.8, turbidity: 2815.3 },
-            { timestamp: '7/8/2025, 20:44:46', pH: 19.24, tds: 107.3, turbidity: 2699.25 },
-            { timestamp: '7/8/2025, 20:44:58', pH: 20.65, tds: 0, turbidity: 2820.13 },
-            { timestamp: '7/8/2025, 20:45:06', pH: 20.46, tds: 5.7, turbidity: 2825.93 },
-            { timestamp: '7/8/2025, 20:45:14', pH: 19.25, tds: 102.3, turbidity: 2751.47 },
-            { timestamp: '7/8/2025, 20:45:23', pH: 20.89, tds: 0, turbidity: 2952.62 },
-            { timestamp: '7/8/2025, 20:45:31', pH: 19.67, tds: 68.5, turbidity: 2720.53 },
-            { timestamp: '7/8/2025, 20:45:40', pH: 20, tds: 45.6, turbidity: 2746.64 },
-            { timestamp: '7/8/2025, 20:45:48', pH: 20.66, tds: 0, turbidity: 2874.29 },
-            { timestamp: '7/8/2025, 20:45:57', pH: 20.37, tds: 11.8, turbidity: 2816.26 },
-            { timestamp: '7/8/2025, 20:46:06', pH: 20.66, tds: 0, turbidity: 2851.08 },
-            { timestamp: '7/8/2025, 20:46:16', pH: 19.57, tds: 79.5, turbidity: 2718.59 },
-            { timestamp: '7/8/2025, 20:46:26', pH: 19.14, tds: 108.4, turbidity: 2730.2 }
+            { timestamp: '7/8/2025, 20:43:35', pH: 7.35, tds: 305, turbidity: 4.2 },
+            { timestamp: '7/8/2025, 20:43:43', pH: 7.28, tds: 295, turbidity: 3.8 },
+            { timestamp: '7/8/2025, 20:43:52', pH: 7.32, tds: 300, turbidity: 4.0 },
+            { timestamp: '7/8/2025, 20:44:06', pH: 7.40, tds: 315, turbidity: 4.5 },
+            { timestamp: '7/8/2025, 20:44:12', pH: 7.48, tds: 330, turbidity: 5.5 },
+            { timestamp: '7/8/2025, 20:44:20', pH: 7.52, tds: 335, turbidity: 5.8 },
+            { timestamp: '7/8/2025, 20:44:29', pH: 7.40, tds: 310, turbidity: 4.7 },
+            { timestamp: '7/8/2025, 20:44:37', pH: 7.45, tds: 325, turbidity: 5.2 },
+            { timestamp: '7/8/2025, 20:44:46', pH: 7.38, tds: 315, turbidity: 4.5 },
+            { timestamp: '7/8/2025, 20:44:58', pH: 7.42, tds: 320, turbidity: 4.8 },
+            { timestamp: '7/8/2025, 20:45:06', pH: 7.40, tds: 315, turbidity: 4.5 },
+            { timestamp: '7/8/2025, 20:45:14', pH: 7.32, tds: 300, turbidity: 4.0 },
+            { timestamp: '7/8/2025, 20:45:23', pH: 7.28, tds: 295, turbidity: 3.8 },
+            { timestamp: '7/8/2025, 20:45:31', pH: 7.35, tds: 305, turbidity: 4.2 },
+            { timestamp: '7/8/2025, 20:45:40', pH: 7.48, tds: 330, turbidity: 5.5 },
+            { timestamp: '7/8/2025, 20:45:48', pH: 7.52, tds: 335, turbidity: 5.8 },
+            { timestamp: '7/8/2025, 20:45:57', pH: 7.40, tds: 310, turbidity: 4.7 },
+            { timestamp: '7/8/2025, 20:46:06', pH: 7.45, tds: 325, turbidity: 5.2 },
+            { timestamp: '7/8/2025, 20:46:16', pH: 7.38, tds: 315, turbidity: 4.5 },
+            { timestamp: '7/8/2025, 20:46:26', pH: 7.42, tds: 320, turbidity: 4.8 }
         ];
 
         // ตัวแปรควบคุมการแสดงข้อมูล
@@ -1156,7 +1156,7 @@ function generatePDF() {
     doc.setFontSize(16);
     doc.setTextColor(30, 136, 229);
     doc.setFont(undefined, 'bold');
-    doc.text('บ่อปลาที่ 2 (ปลาดุก)', 105, 40, { align: 'center' });
+    doc.text('บ่อปลาที่ 2 (ปลานิล)', 105, 40, { align: 'center' });
     
     // ข้อมูลค่าปัจจุบัน
     doc.setFontSize(12);
