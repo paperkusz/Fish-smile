@@ -1,137 +1,282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FishSmile Dashboard (Online)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fish-Smile Dashboard (GitHub Pages)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-  body{margin:0;background:linear-gradient(135deg,#1A1A2E,#162447,#0F3460);color:#F8F9FA;font-family:Segoe UI,Arial,sans-serif}
-  .wrap{max-width:1100px;margin:0 auto;padding:20px}
-  .header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px;background:rgba(26,26,46,.7);border-radius:16px;border:1px solid rgba(255,255,255,.1)}
-  .title h1{margin:0;font-size:22px;background:linear-gradient(135deg,#FF3E8A,#8A2BE2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  :root{
+    --primary:#FF3E8A; --secondary:#8A2BE2; --accent:#00D4FF;
+    --success:#00FF88; --warning:#FFD700; --danger:#FF3860;
+    --bg1:#1A1A2E; --bg2:#162447; --bg3:#0F3460;
+    --card:#ffffff; --text:#162447; --muted:#7a8a9a;
+  }
+  *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    color:#fff;font-family:system-ui,Segoe UI,Arial,sans-serif;min-height:100vh;padding:20px}
+  .wrap{max-width:1100px;margin:0 auto}
+  .head{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;
+    background:rgba(26,26,46,.7);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px 18px}
+  .logo{display:flex;gap:12px;align-items:center}
+  .logo i{font-size:1.9rem;background:linear-gradient(135deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  h1{font-size:1.5rem;margin:0;background:linear-gradient(135deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--accent)}
+  .status{display:flex;gap:10px;align-items:center;background:rgba(0,212,255,.12);padding:8px 14px;border-radius:999px;
+    border:1px solid var(--accent)}
+  .dot{width:10px;height:10px;border-radius:50%;background:#0f0;box-shadow:0 0 12px #0f0}
+  .dot.off{background:#f33;box-shadow:0 0 12px #f33}
+
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:18px}
-  .card{background:rgba(255,255,255,.9);color:#162447;border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,.25)}
-  .label{font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:.06em}
-  .val{font-size:30px;margin:4px 0 10px 0}
-  .row{display:flex;gap:8px;justify-content:space-between}
-  .pill{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid}
-  .raw{background:rgba(0,212,255,.18);color:#005c9e;border-color:#00a9e0}
-  .ok{background:rgba(0,255,136,.18);color:#00663a;border-color:#00c46a}
-  .warn{background:rgba(255,215,0,.23);color:#6a5200;border-color:#ffb700}
-  .bad{background:rgba(255,56,96,.18);color:#7a0026;border-color:#ff4d5e}
-  .card.history{background:rgba(20,27,45,.95);color:#fff}
-  .card.history .label{color:#fff}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,.12);font-size:13px}
-  thead th{position:sticky;top:0;background:rgba(0,0,0,.2)}
-  .controls{display:flex;gap:8px;align-items:center}
-  .footer{margin-top:16px;padding:14px;background:rgba(26,26,46,.7);border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+  .card{background:rgba(255,255,255,.95);color:var(--text);border-radius:16px;padding:16px;border:1px solid #eef}
+  .card h3{margin:0 0 6px 0;font-size:1rem;color:#0f2340;text-transform:uppercase;letter-spacing:.04em}
+  .val{font-size:2.2rem;margin:8px 0 6px 0}
+  .row{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+  .pill{padding:6px 10px;border-radius:999px;border:1px solid #ccd; font-weight:600; font-size:.88rem}
+  .raw{background:rgba(0,212,255,.18);color:#0a5a9e;border-color:#0a9ee6}
+  .ok{background:rgba(0,255,136,.18);color:#006c3e;border-color:#00c46a}
+  .warn{background:rgba(255,215,0,.25);color:#8a6a00;border-color:#ffb700}
+  .bad{background:rgba(255,56,96,.18);color:#8a0031;border-color:#ff4d5e}
+
+  .card.history{background:rgba(20,27,45,.95);color:#fff;border-color:rgba(255,255,255,.18)}
+  .card.history h3{color:#fff}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+  select,button{padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;cursor:pointer}
+  .table-wrap{overflow:auto;max-height:340px;border:1px solid rgba(255,255,255,.2);border-radius:12px}
+  table{border-collapse:collapse;width:100%}
+  th,td{padding:8px;border-bottom:1px dashed rgba(255,255,255,.15);font-size:.92rem}
+  thead th{position:sticky;top:0;background:rgba(20,27,45,1)}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.05)}
+  .foot{margin-top:14px;color:#a9bad0;font-size:.9rem}
+  a{color:#9fd7ff;text-decoration:none}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="header">
-    <div class="title"><h1>Fish-Smile Dashboard (Online)</h1></div>
-    <div class="controls">
-      แถว:
-      <select id="limit">
-        <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
-      </select>
-      <button id="refresh">รีเฟรช</button>
-      <a id="csv" class="pill raw" href="?export=csv" target="_blank" style="text-decoration:none">ดาวน์โหลด CSV</a>
+  <div class="head">
+    <div class="logo">
+      <i class="fas fa-fish"></i>
+      <div>
+        <h1>Fish-Smile Dashboard</h1>
+        <div class="sub">โหมด GitHub Pages (อ่านจาก Google Apps Script)</div>
+      </div>
     </div>
+    <div class="status"><span class="dot" id="dot"></span><span id="stxt">กำลังโหลด…</span></div>
   </div>
 
   <div class="grid">
     <div class="card">
-      <div class="label">Soil 1</div>
+      <h3>Soil 1</h3>
       <div class="val" id="soil1">—</div>
-      <div class="row"><div class="pill raw" id="soil1raw">RAW: —</div><div class="pill ok" id="soil1st">—</div></div>
+      <div class="row">
+        <span class="pill raw" id="soil1raw">RAW: —</span>
+        <span class="pill" id="soil1stat">—</span>
+      </div>
     </div>
 
     <div class="card">
-      <div class="label">Soil 2</div>
+      <h3>Soil 2</h3>
       <div class="val" id="soil2">—</div>
-      <div class="row"><div class="pill raw" id="soil2raw">RAW: —</div><div class="pill ok" id="soil2st">—</div></div>
+      <div class="row">
+        <span class="pill raw" id="soil2raw">RAW: —</span>
+        <span class="pill" id="soil2stat">—</span>
+      </div>
     </div>
 
     <div class="card">
-      <div class="label">Air</div>
+      <h3>Air Humidity</h3>
       <div class="val" id="humid">—</div>
-      <div class="row"><div class="pill raw" id="temp">Temp: —</div><div class="pill ok" id="onl">ONLINE</div></div>
+      <div class="row">
+        <span class="pill raw" id="temp">Temp: —</span>
+        <span class="pill" id="online">—</span>
+      </div>
     </div>
 
     <div class="card">
-      <div class="label">Last</div>
-      <div class="val" id="time">—</div>
-      <div class="row"><div class="pill raw" id="seq">SEQ: —</div><div class="pill raw" id="mac">MAC: —</div></div>
+      <h3>Last Update</h3>
+      <div class="val" id="uptime">—</div>
+      <div class="row">
+        <span class="pill raw" id="seq">SEQ: —</span>
+        <span class="pill" id="mac">MAC: —</span>
+      </div>
     </div>
 
     <div class="card history">
-      <div class="label">ประวัติล่าสุด</div>
-      <div id="msg" style="margin:6px 0 10px 0; font-size:12px; opacity:.85;"></div>
-      <div style="max-height:360px;overflow:auto;border:1px solid rgba(255,255,255,.2);border-radius:10px">
-        <table><thead id="th"></thead><tbody id="tb"></tbody></table>
+      <h3>ประวัติ (จาก Google Sheet)</h3>
+      <div class="controls">
+        แสดงแถว:
+        <select id="limit">
+          <option>10</option><option>20</option><option>30</option><option>40</option><option>50</option>
+        </select>
+        <button id="refresh">รีเฟรช</button>
+        <label style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="auto" checked> Auto-refresh
+        </label>
+        <button id="dlcsv"><i class="fa fa-download"></i> CSV</button>
       </div>
+      <div class="table-wrap">
+        <table id="hist"><thead></thead><tbody></tbody></table>
+      </div>
+      <div class="foot" id="msg"></div>
     </div>
   </div>
 
-  <div class="footer">หน้าเว็บนี้โฮสต์อยู่บน Apps Script — เปิดได้จากทุกที่ที่มีอินเทอร์เน็ต</div>
+  <div class="foot" style="margin-top:14px">
+    เว็บนี้อ่านจาก <code>Google Apps Script</code> เท่านั้น (ปลอดภัยบน HTTPS) •
+    ต้องให้ ESP32 โพสต์ข้อมูลขึ้นชีตก่อน จึงจะเห็นอัปเดตที่นี่
+  </div>
 </div>
 
 <script>
-const qs   = new URL(location.href).searchParams;
-const base = location.href.split('?')[0]; // base ของสคริปต์นี้เอง
+/*** ตั้งค่าให้ตรงกับของคุณ ***/
+const GAS_URL = 'https://script.google.com/macros/s/PASTE_YOUR_EXEC_URL_HERE/exec'; // << แทนที่
+const API_KEY = 'my-secret-key';                                                     // << ให้ตรงกับสคริปต์
+const POLL_MS = 2000;                   // รีเฟรชทุก 2 วิ
+const ONLINE_MS = 40*60*1000;           // ถือว่า "ONLINE" ถ้าแถวล่าสุดอายุน้อยกว่า 40 นาที
 
-function badge(el, cls, txt){ el.className='pill '+cls; el.textContent=txt; }
+function qs(id){return document.getElementById(id);}
+function badge(el, cls, txt){ el.className = 'pill ' + cls; el.textContent = txt; }
 
-async function loadHistory(limit=10){
-  const url= base+'?export=json&limit='+encodeURIComponent(limit);
-  const r  = await fetch(url,{cache:'no-store'});
-  const j  = await r.json();
-  const th = document.getElementById('th');
-  const tb = document.getElementById('tb');
-  const msg= document.getElementById('msg');
-
-  if(!j.ok){ th.innerHTML=''; tb.innerHTML=''; msg.textContent='โหลดผิดพลาด: '+(j.error||''); return; }
-  const hs=j.headers, rows=j.rows||[];
-  if(!hs || rows.length===0){ th.innerHTML=''; tb.innerHTML=''; msg.textContent='ยังไม่มีข้อมูล'; return; }
-
-  // table header
-  let H='<tr>'; hs.forEach(h=>H+='<th>'+h+'</th>'); H+='</tr>'; th.innerHTML=H;
-
-  // latest (ท้ายสุดของ rows) + เติม table
-  let T=''; const last = rows[rows.length-1];
-  rows.slice().reverse().forEach(row=>{
-    T+='<tr>'; hs.forEach(h=>{ let v=row[h]; T+='<td>'+(v==null?'':String(v))+'</td>'; }); T+='</tr>';
+async function fetchJSON(url){
+  const r = await fetch(url, {cache:'no-store'});
+  if(!r.ok) throw new Error('HTTP '+r.status);
+  return await r.json();
+}
+function buildURL(params){
+  const q = new URLSearchParams(params);
+  return GAS_URL + (GAS_URL.includes('?')?'&':'?') + q.toString();
+}
+function parseRows(headers, rows){
+  return rows.map(arr => {
+    const o = {};
+    headers.forEach((h,i)=> o[h] = arr[i]);
+    return o;
   });
-  tb.innerHTML=T;
+}
+function tsToDateStr(val){
+  try{
+    const d = new Date(val);
+    return d.toLocaleString('th-TH', {timeZone:'Asia/Bangkok', hour12:false});
+  }catch(e){ return String(val||''); }
+}
+function updateCards(rec){
+  // map ตาม HEADERS ใน Apps Script
+  const sMAC = rec['Sender MAC'] ?? '—';
+  const seq  = rec['Seq'] ?? '—';
+  const up   = rec['Uptime (s)'] ?? '—';
+  const s1r  = rec['Soil1 RAW']; const s2r = rec['Soil2 RAW'];
+  const s1p  = rec['Soil1 %'];   const s2p = rec['Soil2 %'];
+  const tc   = rec['Temp C'];    const hm  = rec['Humid %'];
 
-  // fill latest cards
-  if(last){
-    const v = (k)=> last[k];
-    document.getElementById('soil1').textContent = (v('Soil1 %')!=null ? Number(v('Soil1 %')).toFixed(1)+' %' : '—');
-    document.getElementById('soil2').textContent = (v('Soil2 %')!=null ? Number(v('Soil2 %')).toFixed(1)+' %' : '—');
-    document.getElementById('soil1raw').textContent='RAW: '+(v('Soil1 RAW') ?? '—');
-    document.getElementById('soil2raw').textContent='RAW: '+(v('Soil2 RAW') ?? '—');
-    const s1=Number(v('Soil1 %')||NaN), s2=Number(v('Soil2 %')||NaN);
-    badge(document.getElementById('soil1st'), (!isNaN(s1)? (s1<20?'bad':(s1<40?'warn':'ok')):'ok'), (!isNaN(s1)? (s1<20?'แห้งมาก':(s1<40?'เริ่มแห้ง':'ชุ่มดี')):'—'));
-    badge(document.getElementById('soil2st'), (!isNaN(s2)? (s2<20?'bad':(s2<40?'warn':'ok')):'ok'), (!isNaN(s2)? (s2<20?'แห้งมาก':(s2<40?'เริ่มแห้ง':'ชุ่มดี')):'—'));
-    document.getElementById('humid').textContent = (v('Humid %')!=null ? Number(v('Humid %')).toFixed(1)+' %RH' : '—');
-    document.getElementById('temp').textContent  = 'Temp: '+(v('Temp C')!=null ? Number(v('Temp C')).toFixed(1)+' °C' : '—');
-    document.getElementById('time').textContent  = v('Timestamp (Asia/Bangkok)') || '—';
-    document.getElementById('seq').textContent   = 'SEQ: '+(v('Seq') ?? '—');
-    document.getElementById('mac').textContent   = 'MAC: '+(v('Sender MAC') ?? '—');
-    badge(document.getElementById('onl'),'ok','ONLINE');
+  qs('soil1').textContent = (s1p!=null && s1p!=='') ? Number(s1p).toFixed(1)+' %' : '—';
+  qs('soil2').textContent = (s2p!=null && s2p!=='') ? Number(s2p).toFixed(1)+' %' : '—';
+  qs('soil1raw').textContent = 'RAW: ' + (s1r ?? '—');
+  qs('soil2raw').textContent = 'RAW: ' + (s2r ?? '—');
+
+  const s1 = Number(s1p); const s2 = Number(s2p);
+  badge(qs('soil1stat'), isNaN(s1)?'warn':(s1<20?'bad':(s1<40?'warn':'ok')), isNaN(s1)?'—':(s1<20?'แห้งมาก':(s1<40?'เริ่มแห้ง':'ชุ่มดี')));
+  badge(qs('soil2stat'), isNaN(s2)?'warn':(s2<20?'bad':(s2<40?'warn':'ok')), isNaN(s2)?'—':(s2<20?'แห้งมาก':(s2<40?'เริ่มแห้ง':'ชุ่มดี')));
+
+  qs('humid').textContent = (hm!=null && hm!=='') ? Number(hm).toFixed(1)+' %RH' : '—';
+  qs('temp').textContent  = 'Temp: ' + ((tc!=null && tc!=='') ? Number(tc).toFixed(1)+' °C' : '—');
+  qs('uptime').textContent= (up!=null && up!=='') ? (up + ' s') : '—';
+  qs('seq').textContent   = 'SEQ: ' + seq;
+  qs('mac').textContent   = 'MAC: ' + sMAC;
+}
+function updateOnline(tsText){
+  const dot = qs('dot'), st = qs('online'), tx = qs('stxt');
+  let online = false;
+  if (tsText){
+    const age = Date.now() - new Date(tsText).getTime();
+    online = age >= 0 && age < ONLINE_MS;
   }
-  msg.textContent = 'แสดง '+rows.length+' แถว • อัปเดตล่าสุด: '+new Date().toLocaleTimeString('th-TH',{hour12:false});
+  if (online){
+    dot.classList.remove('off');
+    badge(st,'ok','ONLINE'); tx.textContent = 'อัปเดตจากชีต (HTTPS)';
+  }else{
+    dot.classList.add('off');
+    badge(st,'bad','OFFLINE'); tx.textContent = 'ยังไม่เห็นอัปเดตใหม่ในช่วงเวลาออนไลน์';
+  }
 }
 
-document.getElementById('refresh').onclick = ()=> loadHistory(Number(document.getElementById('limit').value)||10);
+async function loadLatest(){
+  // ดึง 1 แถวล่าสุดจากชีต
+  const url = buildURL({export:'json', api_key:API_KEY, limit:1});
+  const j = await fetchJSON(url);
+  if (!j.ok || !j.headers || !j.rows || j.rows.length===0) throw new Error('ไม่มีข้อมูลในชีต');
+  const recs = parseRows(j.headers, j.rows);   // ลำดับเดิม: เก่า->ใหม่
+  const last = recs[recs.length-1];            // ใช้แถวล่าสุด
+  updateCards(last);
+  updateOnline(last['Timestamp (Asia/Bangkok)']);
+}
 
-// โหลดครั้งแรก + อัปเดตทุก 5 วิ
-loadHistory(10);
-setInterval(()=>loadHistory(Number(document.getElementById('limit').value)||10), 5000);
+async function loadHistory(limit){
+  const url = buildURL({export:'json', api_key:API_KEY, limit:limit});
+  const j = await fetchJSON(url);
+  const thead = qs('hist').querySelector('thead');
+  const tbody = qs('hist').querySelector('tbody');
+  if (!j.ok || !j.headers) throw new Error(j.error || 'โหลดไม่สำเร็จ');
+  // head
+  thead.innerHTML = '<tr>' + j.headers.map(h=>`<th>${h}</th>`).join('') + '</tr>';
+  // body (ให้ล่าสุดอยู่บนสุด: reverse)
+  const rows = (j.rows||[]).slice().reverse();
+  tbody.innerHTML = rows.map(arr=>{
+    return '<tr>' + arr.map((v,i)=>{
+      const h = j.headers[i];
+      if (h==='Timestamp (Asia/Bangkok)') v = tsToDateStr(v);
+      return `<td>${v==null?'':v}</td>`;
+    }).join('') + '</tr>';
+  }).join('');
+  qs('msg').textContent = `แถวทั้งหมด: ${j.total ?? rows.length} • แสดง: ${rows.length}`;
+}
+
+function initHistoryUI(){
+  const sel = qs('limit'), btn = qs('refresh'), ck = qs('auto'), dl = qs('dlcsv');
+  async function refresh(force){
+    const lim = parseInt(sel.value,10) || 10;
+    await loadHistory(lim);
+    if (force) await loadLatest();
+  }
+  sel.onchange = ()=> refresh(true);
+  btn.onclick  = ()=> refresh(true);
+  dl.onclick   = async ()=>{
+    // ดาวน์โหลด CSV ทั้งชีต
+    const j = await fetchJSON(buildURL({export:'json', api_key:API_KEY, limit:'all'}));
+    if (!j.ok) { alert('โหลดไม่สำเร็จ'); return; }
+    const hs = j.headers, rows = (j.rows||[]).slice().reverse();
+    const csvEsc = s => {
+      let v = (s==null?'':String(s));
+      if (v.includes('"')) v = v.replace(/"/g,'""');
+      if (/[",\n]/.test(v)) v = `"${v}"`;
+      return v;
+    };
+    const lines = [hs.map(csvEsc).join(',')];
+    rows.forEach(r => lines.push(r.map(csvEsc).join(',')));
+    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'history-all.csv'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 0);
+  };
+
+  // auto refresh ประวัติทุก 10 วิ (ไม่หนัก)
+  let timer = null;
+  const start = ()=>{
+    if (timer) clearInterval(timer);
+    if (ck.checked) timer = setInterval(()=> loadHistory(parseInt(sel.value,10)||10), 10000);
+  };
+  ck.onchange = start;
+  start();
+  refresh(true);
+}
+
+async function tick(){
+  try{ await loadLatest(); }catch(e){ /* เงียบไว้ */ }
+}
+setInterval(tick, POLL_MS);
+tick();
+initHistoryUI();
 </script>
 </body>
 </html>
